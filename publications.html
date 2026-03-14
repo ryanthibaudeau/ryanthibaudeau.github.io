@@ -8,208 +8,99 @@
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #080c10;
-      --bg2: rgba(13,21,32,0.88);
-      --surface: rgba(17,25,35,0.85);
-      --border: #1e2d3d;
-      --accent: #e85d26;
-      --accent2: #f5a623;
-      --cyan: #3dd6f5;
-      --text: #c8d8e8;
-      --text-dim: #5a7a9a;
-      --text-bright: #eaf2ff;
-      --mono: 'Share Tech Mono', monospace;
-      --head: 'Rajdhani', sans-serif;
-      --body: 'Barlow', sans-serif;
+      --bg:#080c10;--bg2:rgba(13,21,32,0.88);--surface:rgba(17,25,35,0.85);
+      --border:#1e2d3d;--accent:#e85d26;--accent2:#f5a623;--cyan:#3dd6f5;
+      --text:#c8d8e8;--text-dim:#5a7a9a;--text-bright:#eaf2ff;
+      --mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;--body:'Barlow',sans-serif;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; background: #080c10; }
-    body { background: transparent; color: var(--text); font-family: var(--body); font-weight: 300; overflow-x: hidden; }
-
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 3rem; height: 60px;
-      background: rgba(8,12,16,0.85); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo { font-family: var(--mono); font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.1em; text-decoration: none; }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim);
-      text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase;
-      transition: color 0.2s; position: relative;
-    }
-    .nav-links a.active, .nav-links a:hover { color: var(--text-bright); }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-      height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.2s;
-    }
-    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
-
-    .page-hero {
-      position: relative; z-index: 1;
-      padding: 8rem 10vw 4rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg2);
-      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;
-    }
-    .page-label { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem; }
-    .page-hero h1 { font-family: var(--head); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; color: var(--text-bright); margin-bottom: 0.75rem; }
-    .page-hero p { font-size: 0.95rem; line-height: 1.7; color: var(--text); max-width: 560px; }
-
-    .orcid-badge {
-      display: flex; align-items: center; gap: 0.75rem;
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 0.75rem 1.25rem; text-decoration: none;
-      transition: border-color 0.2s;
-      flex-shrink: 0;
-    }
-    .orcid-badge:hover { border-color: var(--cyan); }
-    .orcid-badge .orcid-icon {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: #a6ce39; display: flex; align-items: center; justify-content: center;
-      font-family: var(--mono); font-size: 0.6rem; font-weight: bold; color: #000;
-      flex-shrink: 0;
-    }
-    .orcid-badge .orcid-text { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
-    .orcid-badge .orcid-id { font-family: var(--mono); font-size: 0.7rem; color: var(--cyan); display: block; margin-top: 0.1rem; }
-
-    /* ── STATS BAR ── */
-    .stats-bar {
-      position: relative; z-index: 1;
-      padding: 1.25rem 10vw;
-      background: var(--bg2); border-bottom: 1px solid var(--border);
-      display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
-    }
-    .stat-item { display: flex; align-items: baseline; gap: 0.6rem; }
-    .stat-num { font-family: var(--head); font-size: 1.8rem; font-weight: 700; color: var(--accent); line-height: 1; }
-    .stat-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; }
-    .stats-divider { width: 1px; height: 32px; background: var(--border); }
-
-    /* ── MAIN ── */
-    main { position: relative; z-index: 1; padding: 4rem 10vw 6rem; }
-
-    /* ── STATUS STATES ── */
-    #loading-state, #error-state, #empty-state { display: none; }
-
-    #loading-state {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; padding: 6rem 0; gap: 1.5rem;
-    }
-    .loader-ring {
-      width: 48px; height: 48px;
-      border: 2px solid var(--border);
-      border-top-color: var(--cyan);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    .loader-text { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    #error-state {
-      padding: 4rem 0; text-align: center;
-    }
-    .error-code { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.25em; margin-bottom: 0.75rem; }
-    .error-msg { font-family: var(--head); font-size: 1.4rem; color: var(--text-bright); margin-bottom: 0.75rem; }
-    .error-sub { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1.5rem; }
-    .btn-secondary {
-      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-      text-decoration: none; color: var(--cyan); background: transparent;
-      padding: 0.7rem 1.5rem; border: 1px solid var(--cyan); cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-secondary:hover { background: rgba(61,214,245,0.08); }
-
-    /* ── PUBLICATIONS LIST ── */
-    #pub-list { display: none; }
-
-    .year-group { margin-bottom: 3rem; }
-    .year-header {
-      display: flex; align-items: center; gap: 1.5rem;
-      margin-bottom: 1.25rem; padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .year-label { font-family: var(--head); font-size: 2rem; font-weight: 700; color: var(--accent); }
-    .year-count { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.2em; }
-
-    .pub-entry {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid transparent;
-      padding: 1.5rem 1.75rem;
-      margin-bottom: 0.85rem;
-      transition: border-color 0.2s, border-left-color 0.2s;
-      position: relative;
-    }
-    .pub-entry:hover { border-color: #2e4060; border-left-color: var(--cyan); }
-
-    .pub-type-badge {
-      position: absolute; top: 1.25rem; right: 1.25rem;
-      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 0.18rem 0.5rem; border: 1px solid var(--border); color: var(--text-dim);
-    }
-
-    .pub-title {
-      font-family: var(--head); font-size: 1.1rem; font-weight: 600;
-      color: var(--text-bright); margin-bottom: 0.4rem; padding-right: 8rem; line-height: 1.3;
-    }
-    .pub-title a { color: inherit; text-decoration: none; }
-    .pub-title a:hover { color: var(--cyan); }
-
-    .pub-journal {
-      font-family: var(--body); font-style: italic; font-size: 0.88rem;
-      color: var(--accent2); margin-bottom: 0.5rem;
-    }
-
-    .pub-meta {
-      display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem;
-    }
-    .pub-meta-item { font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim); letter-spacing: 0.1em; }
-    .pub-meta-item span { color: var(--text); }
-
-    .pub-doi {
-      font-family: var(--mono); font-size: 0.62rem; color: var(--cyan);
-      text-decoration: none; letter-spacing: 0.05em;
-      transition: color 0.2s;
-    }
-    .pub-doi:hover { color: var(--accent2); }
-
-    /* ── FOOTER ── */
-    footer {
-      position: relative; z-index: 1;
-      border-top: 1px solid var(--border); padding: 2rem 10vw;
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--bg2);
-    }
-    footer .copy { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
-    footer .footer-links { display: flex; gap: 1.5rem; }
-    footer a { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
-    footer a:hover { color: var(--cyan); }
-
-    .scanline {
-      position: fixed; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      animation: scan 8s linear infinite; opacity: 0.15; pointer-events: none; z-index: 200;
-    }
-    @keyframes scan { 0% { top: -10px; } 100% { top: 100vh; } }
-
-    @media (max-width: 768px) {
-      nav { padding: 0 1.5rem; }
-      .nav-links { gap: 1.2rem; }
-      .page-hero, main, .stats-bar { padding-left: 6vw; padding-right: 6vw; }
-      footer { padding: 2rem 6vw; }
-      .pub-type-badge { display: none; }
-      .pub-title { padding-right: 0; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;background:#080c10;}
+    body{background:transparent;color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:60px;background:rgba(8,12,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--mono);font-size:0.8rem;color:var(--cyan);letter-spacing:0.1em;text-decoration:none;}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;position:relative;}
+    .nav-links a.active,.nav-links a:hover{color:var(--text-bright);}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transition:transform 0.2s;}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+    .page-hero{position:relative;z-index:1;padding:8rem 10vw 4rem;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;}
+    .page-label{font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;}
+    .page-hero h1{font-family:var(--head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:var(--text-bright);margin-bottom:0.75rem;}
+    .page-hero p{font-size:0.95rem;line-height:1.7;color:var(--text);max-width:560px;}
+    .orcid-badge{display:flex;align-items:center;gap:0.75rem;background:var(--surface);border:1px solid var(--border);padding:0.75rem 1.25rem;text-decoration:none;transition:border-color 0.2s;flex-shrink:0;}
+    .orcid-badge:hover{border-color:var(--cyan);}
+    .orcid-icon{width:24px;height:24px;border-radius:50%;background:#a6ce39;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.6rem;font-weight:bold;color:#000;flex-shrink:0;}
+    .orcid-text{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+    .orcid-id{font-family:var(--mono);font-size:0.7rem;color:var(--cyan);display:block;margin-top:0.1rem;}
+    .stats-bar{position:relative;z-index:1;padding:1.25rem 10vw;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:3rem;align-items:center;flex-wrap:wrap;}
+    .stat-item{display:flex;align-items:baseline;gap:0.6rem;}
+    .stat-num{font-family:var(--head);font-size:1.8rem;font-weight:700;color:var(--accent);line-height:1;}
+    .stat-label{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;}
+    .stats-divider{width:1px;height:32px;background:var(--border);}
+    .tab-bar{position:relative;z-index:1;padding:0 10vw;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;}
+    .tab-btn{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);background:transparent;border:none;border-bottom:2px solid transparent;padding:1.1rem 1.75rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;display:flex;align-items:center;gap:0.6rem;}
+    .tab-btn:hover{color:var(--text);}
+    .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+    .tab-count{font-family:var(--mono);font-size:0.6rem;background:var(--border);color:var(--text-dim);padding:0.1rem 0.45rem;border-radius:2px;transition:background 0.2s,color 0.2s;}
+    .tab-btn.active .tab-count{background:rgba(61,214,245,0.15);color:var(--cyan);}
+    main{position:relative;z-index:1;padding:4rem 10vw 6rem;}
+    #loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 0;gap:1.5rem;}
+    #error-state,#empty-state{display:none;padding:4rem 0;text-align:center;}
+    .loader-ring{width:48px;height:48px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;}
+    .loader-text{font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .error-code{font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.25em;margin-bottom:0.75rem;}
+    .error-msg{font-family:var(--head);font-size:1.4rem;color:var(--text-bright);margin-bottom:0.75rem;}
+    .error-sub{font-size:0.9rem;color:var(--text-dim);margin-bottom:1.5rem;}
+    .btn-secondary{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:var(--cyan);background:transparent;padding:0.7rem 1.5rem;border:1px solid var(--cyan);cursor:pointer;transition:background 0.2s;display:inline-block;}
+    .btn-secondary:hover{background:rgba(61,214,245,0.08);}
+    #view-type,#view-year{display:none;}
+    .group-section{margin-bottom:3.5rem;}
+    .group-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+    .group-label{font-family:var(--head);font-size:1.6rem;font-weight:700;color:var(--text-bright);}
+    .group-label.year-label{color:var(--accent);}
+    .group-count{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.2em;margin-left:auto;}
+    .type-journal .group-label{color:var(--cyan);}
+    .type-conference .group-label{color:var(--accent);}
+    .type-thesis .group-label{color:var(--accent2);}
+    .type-other .group-label{color:var(--text-dim);}
+    .year-subgroup{margin-bottom:1.5rem;}
+    .year-subheader{font-family:var(--mono);font-size:0.65rem;color:var(--accent2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
+    .pub-entry{background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;padding:1.5rem 1.75rem;margin-bottom:0.75rem;transition:border-color 0.2s,border-left-color 0.2s;position:relative;}
+    .pub-entry:hover{border-color:#2e4060;}
+    .type-journal .pub-entry:hover{border-left-color:var(--cyan);}
+    .type-conference .pub-entry:hover{border-left-color:var(--accent);}
+    .type-thesis .pub-entry:hover{border-left-color:var(--accent2);}
+    .type-other .pub-entry:hover{border-left-color:var(--text-dim);}
+    #view-year .pub-entry:hover{border-left-color:var(--cyan);}
+    .pub-type-badge{position:absolute;top:1.25rem;right:1.25rem;font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.18rem 0.5rem;border:1px solid var(--border);color:var(--text-dim);}
+    .pub-title{font-family:var(--head);font-size:1.1rem;font-weight:600;color:var(--text-bright);margin-bottom:0.4rem;padding-right:8rem;line-height:1.3;}
+    .pub-title a{color:inherit;text-decoration:none;}
+    .pub-title a:hover{color:var(--cyan);}
+    .pub-journal{font-family:var(--body);font-style:italic;font-size:0.88rem;color:var(--accent2);margin-bottom:0.5rem;}
+    .pub-meta{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;margin-top:0.75rem;}
+    .pub-meta-item{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);letter-spacing:0.1em;}
+    .pub-meta-item span{color:var(--text);}
+    .pub-doi{font-family:var(--mono);font-size:0.62rem;color:var(--cyan);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;}
+    .pub-doi:hover{color:var(--accent2);}
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem 10vw;display:flex;justify-content:space-between;align-items:center;background:var(--bg2);}
+    footer .copy{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+    footer .footer-links{display:flex;gap:1.5rem;}
+    footer a{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;transition:color 0.2s;}
+    footer a:hover{color:var(--cyan);}
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scan 8s linear infinite;opacity:0.15;pointer-events:none;z-index:200;}
+    @keyframes scan{0%{top:-10px;}100%{top:100vh;}}
+    @media(max-width:900px){
+      nav{padding:0 1.5rem;}.nav-links{gap:1rem;}
+      .page-hero,main,.stats-bar,.tab-bar{padding-left:6vw;padding-right:6vw;}
+      footer{padding:2rem 6vw;}
+      .pub-type-badge{display:none;}.pub-title{padding-right:0;}
     }
   </style>
 </head>
 <body>
-
 <div class="scanline"></div>
-
 <nav>
   <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
   <ul class="nav-links">
@@ -230,224 +121,175 @@
   </div>
   <a class="orcid-badge" href="https://orcid.org/0009-0000-6483-2373" target="_blank" rel="noopener">
     <div class="orcid-icon">iD</div>
-    <div class="orcid-text">
-      ORCID Profile
-      <span class="orcid-id">0009-0000-6483-2373</span>
-    </div>
+    <div class="orcid-text">ORCID Profile<span class="orcid-id">0009-0000-6483-2373</span></div>
   </a>
 </div>
 
 <div class="stats-bar">
-  <div class="stat-item">
-    <div class="stat-num" id="stat-total">—</div>
-    <div class="stat-label">Total Works</div>
-  </div>
+  <div class="stat-item"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total Works</div></div>
   <div class="stats-divider"></div>
-  <div class="stat-item">
-    <div class="stat-num" id="stat-years">—</div>
-    <div class="stat-label">Years Active</div>
-  </div>
+  <div class="stat-item"><div class="stat-num" id="stat-journals">—</div><div class="stat-label">Journal Articles</div></div>
   <div class="stats-divider"></div>
-  <div class="stat-item">
-    <div class="stat-num" id="stat-recent">—</div>
-    <div class="stat-label">Most Recent Year</div>
-  </div>
+  <div class="stat-item"><div class="stat-num" id="stat-conferences">—</div><div class="stat-label">Conference Papers</div></div>
+  <div class="stats-divider"></div>
+  <div class="stat-item"><div class="stat-num" id="stat-recent">—</div><div class="stat-label">Most Recent Year</div></div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-type" onclick="switchTab('type')">By Type <span class="tab-count" id="count-type">—</span></button>
+  <button class="tab-btn" id="tab-year" onclick="switchTab('year')">By Year <span class="tab-count" id="count-year">—</span></button>
 </div>
 
 <main>
-  <!-- Loading -->
-  <div id="loading-state">
-    <div class="loader-ring"></div>
-    <div class="loader-text">Fetching from ORCID...</div>
-  </div>
-
-  <!-- Error -->
+  <div id="loading-state"><div class="loader-ring"></div><div class="loader-text">Fetching from ORCID...</div></div>
   <div id="error-state">
     <div class="error-code">// error</div>
     <div class="error-msg">Could not load publications</div>
-    <div class="error-sub" id="error-detail">Unable to reach the ORCID API. Please try again.</div>
+    <div class="error-sub" id="error-detail">Unable to reach the ORCID API.</div>
     <a href="https://orcid.org/0009-0000-6483-2373" target="_blank" class="btn-secondary">View on ORCID →</a>
   </div>
-
-  <!-- Empty -->
   <div id="empty-state">
     <div class="error-code">// no results</div>
     <div class="error-msg">No publications found</div>
     <div class="error-sub">Add works to your ORCID profile and they'll appear here automatically.</div>
     <a href="https://orcid.org/0009-0000-6483-2373" target="_blank" class="btn-secondary">Manage ORCID →</a>
   </div>
-
-  <!-- Publication list (populated by JS) -->
-  <div id="pub-list"></div>
+  <div id="view-type"></div>
+  <div id="view-year"></div>
 </main>
 
 <footer>
   <span class="copy">© 2026 Ryan Thibaudeau. Publications sourced from ORCID.</span>
   <div class="footer-links">
-    <a href="home.html">Home</a>
-    <a href="research.html">Research</a>
-    <a href="portfolio.html">Portfolio</a>
-    <a href="CV.html">CV</a>
-    <a href="contact.html">Contact</a>
+    <a href="home.html">Home</a><a href="research.html">Research</a>
+    <a href="portfolio.html">Portfolio</a><a href="CV.html">CV</a><a href="contact.html">Contact</a>
   </div>
 </footer>
 
 <canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
 <script src="background.js"></script>
-
 <script>
-const ORCID_ID = '0009-0000-6483-2373';
-const API_BASE = 'https://pub.orcid.org/v3.0';
+const ORCID_ID='0009-0000-6483-2373';
+const API_BASE='https://pub.orcid.org/v3.0';
 
-function setState(state) {
-  ['loading-state', 'error-state', 'empty-state', 'pub-list'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
-  document.getElementById(state).style.display =
-    (state === 'pub-list') ? 'block' : 'flex';
-  if (state === 'error-state' || state === 'empty-state') {
-    document.getElementById(state).style.display = 'block';
-  }
-}
+const TYPE_MAP={
+  'journal-article':        {label:'Journal Articles',       cls:'type-journal',    order:1},
+  'conference-paper':       {label:'Conference Papers',      cls:'type-conference', order:2},
+  'conference-abstract':    {label:'Conference Papers',      cls:'type-conference', order:2},
+  'conference-poster':      {label:'Conference Papers',      cls:'type-conference', order:2},
+  'dissertation':           {label:'Theses & Dissertations', cls:'type-thesis',     order:3},
+  'preprint':               {label:'Preprints',              cls:'type-other',      order:4},
+  'report':                 {label:'Reports & Other',        cls:'type-other',      order:5},
+  'other':                  {label:'Other Works',            cls:'type-other',      order:6},
+};
 
-function formatWorkType(type) {
-  if (!type) return 'Work';
-  return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-}
+function getCat(type){return TYPE_MAP[type]||{label:'Other Works',cls:'type-other',order:99};}
+function getYear(w){try{return w['work-summary']?.[0]?.['publication-date']?.year?.value||null;}catch{return null;}}
+function getDOI(w){try{const ids=w['work-summary']?.[0]?.['external-ids']?.['external-id']||[];const d=ids.find(i=>i['external-id-type']==='doi');return d?.['external-id-value']||null;}catch{return null;}}
+function getJournal(w){try{return w['work-summary']?.[0]?.['journal-title']?.value||null;}catch{return null;}}
+function getType(w){try{return w['work-summary']?.[0]?.type||'other';}catch{return 'other';}}
+function fmtType(t){return t.replace(/[_-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
 
-function getYear(work) {
-  try {
-    return work['work-summary']?.[0]?.['publication-date']?.year?.value || null;
-  } catch { return null; }
-}
-
-function getDOI(work) {
-  try {
-    const ids = work['work-summary']?.[0]?.['external-ids']?.['external-id'] || [];
-    const doi = ids.find(id => id['external-id-type'] === 'doi');
-    return doi?.['external-id-value'] || null;
-  } catch { return null; }
-}
-
-function getJournal(work) {
-  try {
-    return work['work-summary']?.[0]?.['journal-title']?.value || null;
-  } catch { return null; }
-}
-
-function buildPubHTML(work) {
-  const summary = work['work-summary']?.[0];
-  if (!summary) return '';
-
-  const title = summary.title?.title?.value || 'Untitled';
-  const year = summary['publication-date']?.year?.value || '—';
-  const type = formatWorkType(summary.type);
-  const journal = getJournal(work);
-  const doi = getDOI(work);
-  const url = summary.url?.value || (doi ? `https://doi.org/${doi}` : null);
-
-  const titleHTML = url
-    ? `<a href="${url}" target="_blank" rel="noopener">${title}</a>`
-    : title;
-
-  const doiHTML = doi
-    ? `<a class="pub-doi" href="https://doi.org/${doi}" target="_blank" rel="noopener">DOI: ${doi}</a>`
-    : '';
-
-  const journalHTML = journal
-    ? `<div class="pub-journal">${journal}</div>`
-    : '';
-
-  return `
-    <div class="pub-entry">
-      <span class="pub-type-badge">${type}</span>
-      <div class="pub-title">${titleHTML}</div>
-      ${journalHTML}
-      <div class="pub-meta">
-        <div class="pub-meta-item">Year <span>${year}</span></div>
-        ${doiHTML ? `<div class="pub-meta-item">${doiHTML}</div>` : ''}
-      </div>
+function pubHTML(work, showBadge){
+  const s=work['work-summary']?.[0]; if(!s)return '';
+  const title=s.title?.title?.value||'Untitled';
+  const year=s['publication-date']?.year?.value||'—';
+  const doi=getDOI(work); const journal=getJournal(work);
+  const url=s.url?.value||(doi?`https://doi.org/${doi}`:null);
+  const type=getType(work);
+  return `<div class="pub-entry">
+    ${showBadge?`<span class="pub-type-badge">${fmtType(type)}</span>`:''}
+    <div class="pub-title">${url?`<a href="${url}" target="_blank" rel="noopener">${title}</a>`:title}</div>
+    ${journal?`<div class="pub-journal">${journal}</div>`:''}
+    <div class="pub-meta">
+      <div class="pub-meta-item">Year <span>${year}</span></div>
+      ${doi?`<div class="pub-meta-item"><a class="pub-doi" href="https://doi.org/${doi}" target="_blank" rel="noopener">DOI: ${doi}</a></div>`:''}
     </div>
-  `;
+  </div>`;
 }
 
-async function loadPublications() {
+function buildTypeView(groups){
+  const cats={};
+  groups.forEach(w=>{
+    const cat=getCat(getType(w)); const k=cat.label;
+    if(!cats[k])cats[k]={...cat,works:[]};
+    cats[k].works.push(w);
+  });
+  return Object.values(cats).sort((a,b)=>a.order-b.order).map(cat=>{
+    cat.works.sort((a,b)=>(parseInt(getYear(b))||0)-(parseInt(getYear(a))||0));
+    const byYear={};
+    cat.works.forEach(w=>{const y=getYear(w)||'Undated';if(!byYear[y])byYear[y]=[];byYear[y].push(w);});
+    const years=Object.keys(byYear).sort((a,b)=>{if(a==='Undated')return 1;if(b==='Undated')return -1;return parseInt(b)-parseInt(a);});
+    return `<div class="group-section ${cat.cls}">
+      <div class="group-header">
+        <div class="group-label">${cat.label}</div>
+        <div class="group-count">${cat.works.length} work${cat.works.length!==1?'s':''}</div>
+      </div>
+      ${years.map(y=>`<div class="year-subgroup"><div class="year-subheader">// ${y}</div>${byYear[y].map(w=>pubHTML(w,false)).join('')}</div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function buildYearView(groups){
+  const byYear={};
+  groups.forEach(w=>{const y=getYear(w)||'Undated';if(!byYear[y])byYear[y]=[];byYear[y].push(w);});
+  const years=Object.keys(byYear).sort((a,b)=>{if(a==='Undated')return 1;if(b==='Undated')return -1;return parseInt(b)-parseInt(a);});
+  return years.map(y=>`<div class="group-section">
+    <div class="group-header">
+      <div class="group-label year-label">${y}</div>
+      <div class="group-count">${byYear[y].length} work${byYear[y].length!==1?'s':''}</div>
+    </div>
+    ${byYear[y].map(w=>pubHTML(w,true)).join('')}
+  </div>`).join('');
+}
+
+function switchTab(tab){
+  document.getElementById('tab-type').classList.toggle('active',tab==='type');
+  document.getElementById('tab-year').classList.toggle('active',tab==='year');
+  document.getElementById('view-type').style.display=tab==='type'?'block':'none';
+  document.getElementById('view-year').style.display=tab==='year'?'block':'none';
+}
+
+function setState(state){
+  ['loading-state','error-state','empty-state','view-type','view-year'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  if(state==='loading-state')document.getElementById('loading-state').style.display='flex';
+  else if(state==='content')switchTab('type');
+  else document.getElementById(state).style.display='block';
+}
+
+async function load(){
   setState('loading-state');
+  try{
+    const res=await fetch(`${API_BASE}/${ORCID_ID}/works`,{headers:{'Accept':'application/json'}});
+    if(!res.ok)throw new Error(`ORCID API returned ${res.status}`);
+    const data=await res.json();
+    const groups=data?.group||[];
+    if(!groups.length){setState('empty-state');return;}
 
-  try {
-    const res = await fetch(`${API_BASE}/${ORCID_ID}/works`, {
-      headers: { 'Accept': 'application/json' }
-    });
+    document.getElementById('view-type').innerHTML=buildTypeView(groups);
+    document.getElementById('view-year').innerHTML=buildYearView(groups);
+    setState('content');
 
-    if (!res.ok) throw new Error(`ORCID API returned ${res.status}`);
+    document.getElementById('count-type').textContent=groups.length;
+    document.getElementById('count-year').textContent=groups.length;
 
-    const data = await res.json();
-    const groups = data?.group || [];
-
-    if (groups.length === 0) {
-      setState('empty-state');
-      return;
-    }
-
-    // Sort by year descending
-    groups.sort((a, b) => {
-      const ya = parseInt(getYear(a)) || 0;
-      const yb = parseInt(getYear(b)) || 0;
-      return yb - ya;
-    });
-
-    // Group by year
-    const byYear = {};
-    groups.forEach(work => {
-      const year = getYear(work) || 'Undated';
-      if (!byYear[year]) byYear[year] = [];
-      byYear[year].push(work);
-    });
-
-    // Build HTML
-    let html = '';
-    const sortedYears = Object.keys(byYear).sort((a, b) => {
-      if (a === 'Undated') return 1;
-      if (b === 'Undated') return -1;
-      return parseInt(b) - parseInt(a);
-    });
-
-    sortedYears.forEach(year => {
-      const works = byYear[year];
-      html += `
-        <div class="year-group">
-          <div class="year-header">
-            <div class="year-label">${year}</div>
-            <div class="year-count">${works.length} work${works.length !== 1 ? 's' : ''}</div>
-          </div>
-          ${works.map(buildPubHTML).join('')}
-        </div>
-      `;
-    });
-
-    document.getElementById('pub-list').innerHTML = html;
-    setState('pub-list');
-
-    // Update stats
-    const years = sortedYears.filter(y => y !== 'Undated').map(Number);
-    document.getElementById('stat-total').textContent = groups.length;
-    document.getElementById('stat-years').textContent = years.length > 0
-      ? (Math.max(...years) - Math.min(...years) + 1)
-      : '—';
-    document.getElementById('stat-recent').textContent = years.length > 0
-      ? Math.max(...years)
-      : '—';
-
-  } catch (err) {
-    console.error('ORCID fetch error:', err);
-    document.getElementById('error-detail').textContent =
-      err.message || 'Unable to reach the ORCID API. Please try again.';
+    const journals=groups.filter(w=>getType(w)==='journal-article').length;
+    const confs=groups.filter(w=>['conference-paper','conference-abstract','conference-poster'].includes(getType(w))).length;
+    const years=groups.map(w=>parseInt(getYear(w))).filter(Boolean);
+    document.getElementById('stat-total').textContent=groups.length;
+    document.getElementById('stat-journals').textContent=journals;
+    document.getElementById('stat-conferences').textContent=confs;
+    document.getElementById('stat-recent').textContent=years.length?Math.max(...years):'—';
+  }catch(err){
+    console.error(err);
+    document.getElementById('error-detail').textContent=err.message||'Unable to reach the ORCID API.';
     setState('error-state');
   }
 }
 
-loadPublications();
+load();
 </script>
-
 </body>
 </html>
