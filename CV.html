@@ -1,1 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CV — Ryan Thibaudeau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c10; --bg2: rgba(13,21,32,0.88); --surface: rgba(17,25,35,0.85); --border: #1e2d3d;
+      --accent: #e85d26; --accent2: #f5a623; --cyan: #3dd6f5;
+      --text: #c8d8e8; --text-dim: #5a7a9a; --text-bright: #eaf2ff;
+      --mono: 'Share Tech Mono', monospace; --head: 'Rajdhani', sans-serif; --body: 'Barlow', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: var(--body); font-weight: 300; overflow-x: hidden; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 60px; background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: var(--mono); font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.1em; text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim);
+      text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-links a.active, .nav-links a:hover { color: var(--text-bright); }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.2s; }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
 
+    .page-hero {
+      position: relative; z-index: 1; padding: 8rem 10vw 4rem;
+      border-bottom: 1px solid var(--border); background: var(--bg2);
+      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;
+    }
+    .page-label { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .page-hero h1 { font-family: var(--head); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; color: var(--text-bright); margin-bottom: 0.5rem; }
+    .page-hero p { font-size: 0.9rem; color: var(--text-dim); font-family: var(--mono); }
+
+    .btn-primary {
+      font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      text-decoration: none; color: var(--bg); background: var(--accent); padding: 0.85rem 2rem;
+      border: none; cursor: pointer; transition: background 0.2s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      align-self: flex-end;
+    }
+    .btn-primary:hover { background: var(--accent2); }
+
+    main { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 2fr; gap: 0; }
+
+    .cv-sidebar {
+      background: var(--bg2); border-right: 1px solid var(--border);
+      padding: 4rem 2.5rem; min-height: 100vh;
+    }
+
+    .cv-main { padding: 4rem 4rem 4rem 3.5rem; }
+
+    .cv-section { margin-bottom: 3rem; }
+    .cv-section-label {
+      font-family: var(--mono); font-size: 0.6rem; color: var(--accent);
+      letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+    }
+
+    /* Sidebar items */
+    .sidebar-item { margin-bottom: 1.5rem; }
+    .sidebar-item .label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .sidebar-item .value { font-size: 0.9rem; color: var(--text-bright); }
+    .sidebar-item .value a { color: var(--cyan); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; }
+
+    .skill-tag {
+      display: inline-block; font-family: var(--mono); font-size: 0.6rem;
+      color: var(--text-dim); border: 1px solid var(--border);
+      padding: 0.25rem 0.5rem; margin: 0.2rem 0.2rem 0.2rem 0;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .skill-tag:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* Main CV entries */
+    .cv-entry { margin-bottom: 2.25rem; padding-bottom: 2.25rem; border-bottom: 1px solid var(--border); }
+    .cv-entry:last-child { border-bottom: none; }
+
+    .entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem; flex-wrap: wrap; gap: 0.5rem; }
+    .entry-title { font-family: var(--head); font-size: 1.15rem; font-weight: 600; color: var(--text-bright); }
+    .entry-date { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.1em; white-space: nowrap; }
+    .entry-org { font-family: var(--mono); font-size: 0.7rem; color: var(--cyan); letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+    .entry-body { font-size: 0.9rem; line-height: 1.8; color: var(--text); }
+    .entry-body ul { list-style: none; margin-top: 0.5rem; }
+    .entry-body ul li { padding-left: 1.2rem; position: relative; margin-bottom: 0.3rem; }
+    .entry-body ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.75rem; }
+
+    footer {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--border); padding: 2rem 10vw;
+      display: flex; justify-content: space-between; align-items: center; background: var(--bg2);
+      position: relative; z-index: 1;
+    }
+    footer .copy { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
+    footer .footer-links { display: flex; gap: 1.5rem; }
+    footer a { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+    footer a:hover { color: var(--cyan); }
+
+    .scanline { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); animation: scan 8s linear infinite; opacity: 0.15; pointer-events: none; z-index: 200; }
+    @keyframes scan { 0% { top: -10px; } 100% { top: 100vh; } }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .cv-sidebar { border-right: none; border-bottom: 1px solid var(--border); min-height: unset; }
+      .cv-main { padding: 3rem 6vw; }
+      nav { padding: 0 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav>
+  <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="CV.html" class="active">CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div>
+    <div class="page-label">// curriculum vitae</div>
+    <h1>Ryan Thibaudeau</h1>
+    <p>PhD Researcher · Propulsion Engineer</p>
+  </div>
+  <!-- Replace href with a link to your actual PDF when ready -->
+  <a href="#" class="btn-primary">↓ Download PDF</a>
+</div>
+
+<main>
+  <!-- SIDEBAR -->
+  <aside class="cv-sidebar">
+
+    <div class="cv-section">
+      <div class="cv-section-label">// contact</div>
+      <div class="sidebar-item">
+        <div class="label">Institution</div>
+        <div class="value">Utah State University</div>
+      </div>
+      <div class="sidebar-item">
+        <div class="label">Location</div>
+        <div class="value">Logan, UT</div>
+      </div>
+      <div class="sidebar-item">
+        <div class="label">Email</div>
+        <div class="value"><a href="/cdn-cgi/l/email-protection#46343f272868322e2f242733222327330633353368232233"><span class="__cf_email__" data-cfemail="74060d151a5a001c1d16150110111501340107015a111001">[email&#160;protected]</span></a></div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-label">// expertise</div>
+      <span class="skill-tag">Hybrid Rocket Engines</span>
+      <span class="skill-tag">Solid Fuel Ramjets</span>
+      <span class="skill-tag">Chemical Propulsion</span>
+      <span class="skill-tag">Combustion Analysis</span>
+      <span class="skill-tag">Propulsion Testing</span>
+      <span class="skill-tag">Fluid Dynamics</span>
+      <span class="skill-tag">Thermodynamics</span>
+      <span class="skill-tag">System Design</span>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-label">// tools & methods</div>
+      <span class="skill-tag">MATLAB</span>
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">SolidWorks</span>
+      <span class="skill-tag">CFD</span>
+      <span class="skill-tag">LabVIEW</span>
+      <span class="skill-tag">Data Acquisition</span>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <div class="cv-main">
+
+    <div class="cv-section">
+      <div class="cv-section-label">// experience</div>
+
+      <div class="cv-entry">
+        <div class="entry-header">
+          <span class="entry-title">PhD Researcher</span>
+          <span class="entry-date">Present</span>
+        </div>
+        <div class="entry-org">Utah State University — Propulsion Research Laboratory (PRL)</div>
+        <div class="entry-body">
+          Conducting doctoral research in chemical propulsion, specializing in hybrid rocket engines and solid fuel ramjet systems. Work spans experimental testing, analytical modeling, and performance characterization.
+          <ul>
+            <li>Hybrid rocket engine combustion research and fuel regression analysis</li>
+            <li>Solid fuel ramjet performance modeling and experimental validation</li>
+            <li>Design and operation of propulsion test facilities</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cv-entry">
+        <div class="entry-header">
+          <span class="entry-title">Propulsion Engineer</span>
+          <span class="entry-date">Present</span>
+        </div>
+        <div class="entry-org">Space Dynamics Lab — Student Engineering Assistant</div>
+        <div class="entry-body">
+          Contributing to propulsion system engineering efforts at SDL, applying research expertise to mission-critical projects. Responsibilities span analysis, design support, and technical problem-solving in a professional engineering environment.
+          <ul>
+            <li>Propulsion system analysis and design support</li>
+            <li>Technical documentation and engineering reporting</li>
+            <li>Cross-disciplinary collaboration with flight systems teams</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-label">// education</div>
+      <div class="cv-entry">
+        <div class="entry-header">
+          <span class="entry-title">PhD — Mechanical & Aerospace Engineering</span>
+          <span class="entry-date">In Progress</span>
+        </div>
+        <div class="entry-org">Utah State University</div>
+        <div class="entry-body">
+          Focus: Chemical propulsion, hybrid rocket engines, solid fuel ramjets.<br>
+          Advisor: [Advisor Name] · Lab: Propulsion Research Laboratory
+        </div>
+      </div>
+      <!-- Add your undergrad below -->
+      <div class="cv-entry">
+        <div class="entry-header">
+          <span class="entry-title">B.S. — [Your Undergraduate Degree]</span>
+          <span class="entry-date">[Year]</span>
+        </div>
+        <div class="entry-org">[Your Undergraduate Institution]</div>
+        <div class="entry-body">[Add details here]</div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-label">// publications & presentations</div>
+      <div class="cv-entry">
+        <div class="entry-body" style="color: var(--text-dim); font-style: italic; font-family: var(--mono); font-size: 0.75rem;">
+          Publications and conference presentations will be listed here as they are added.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a

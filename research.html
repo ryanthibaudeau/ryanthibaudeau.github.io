@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Research — Ryan Thibaudeau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c10;
+      --bg2: rgba(13,21,32,0.88);
+      --surface: rgba(17,25,35,0.85);
+      --border: #1e2d3d;
+      --accent: #e85d26;
+      --accent2: #f5a623;
+      --cyan: #3dd6f5;
+      --text: #c8d8e8;
+      --text-dim: #5a7a9a;
+      --text-bright: #eaf2ff;
+      --mono: 'Share Tech Mono', monospace;
+      --head: 'Rajdhani', sans-serif;
+      --body: 'Barlow', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: #080c10; }
+    body { background: var(--bg); color: var(--text); font-family: var(--body); font-weight: 300; overflow-x: hidden; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 60px;
+      background: rgba(8,12,16,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: var(--mono); font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.1em; text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim);
+      text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-links a.active, .nav-links a:hover { color: var(--text-bright); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.2s;
+    }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+    .page-hero {
+      position: relative; z-index: 1;
+      padding: 8rem 10vw 4rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .page-label {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+      letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .page-hero h1 {
+      font-family: var(--head); font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700; color: var(--text-bright); margin-bottom: 1rem;
+    }
+    .page-hero p {
+      font-size: 1rem; line-height: 1.75; color: var(--text); max-width: 600px;
+    }
+
+    section { position: relative; z-index: 1; padding: 5rem 10vw; }
+    .section-label { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    h2 { font-family: var(--head); font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; color: var(--text-bright); margin-bottom: 2.5rem; position: relative; display: inline-block; }
+    h2::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 60%; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+
+    .research-block {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 4rem;
+      padding: 3rem 0; border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .research-block:last-of-type { border-bottom: none; }
+
+    .block-meta {}
+    .block-id { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.25em; margin-bottom: 0.5rem; }
+    .block-meta h3 { font-family: var(--head); font-size: 1.6rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.5rem; }
+    .block-tag {
+      display: inline-block;
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--cyan); border: 1px solid var(--cyan); padding: 0.2rem 0.6rem;
+      margin-top: 0.75rem;
+    }
+
+    .block-content p { font-size: 0.975rem; line-height: 1.85; color: var(--text); margin-bottom: 1.2rem; }
+    .block-content p strong { color: var(--text-bright); font-weight: 600; }
+
+    .topic-list { list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .topic-list li {
+      font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim);
+      padding-left: 1.2rem; position: relative;
+    }
+    .topic-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+    /* SDL section */
+    #sdl {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sdl-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      padding: 2rem 2.5rem;
+      max-width: 700px;
+    }
+    .sdl-card p { font-size: 0.975rem; line-height: 1.85; color: var(--text); }
+    .sdl-card p + p { margin-top: 1rem; }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem 10vw;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg2);
+    }
+    footer .copy { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
+    footer .footer-links { display: flex; gap: 1.5rem; }
+    footer a { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+    footer a:hover { color: var(--cyan); }
+
+    .scanline {
+      position: fixed; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: scan 8s linear infinite; opacity: 0.15; pointer-events: none; z-index: 200;
+    }
+    @keyframes scan { 0% { top: -10px; } 100% { top: 100vh; } }
+    @media (max-width: 768px) {
+      nav { padding: 0 1.5rem; }
+      section { padding: 4rem 6vw; }
+      .research-block { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav>
+  <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="research.html" class="active">Research</a></li>
+    <li><a href="CV.html">CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">// research</div>
+  <h1>Research & Projects</h1>
+  <p>My work at USU's Propulsion Research Laboratory focuses on advancing chemical propulsion systems — from fundamental combustion physics to operational propulsion architectures.</p>
+</div>
+
+<!-- PRL Research -->
+<section id="prl">
+  <div class="section-label">// usu propulsion research laboratory</div>
+  <h2>PhD Research</h2>
+
+  <div class="research-block">
+    <div class="block-meta">
+      <div class="block-id">// HRE-01</div>
+      <h3>Hybrid Rocket Engines</h3>
+      <div class="block-tag">Active Research</div>
+    </div>
+    <div class="block-content">
+      <p>
+        Hybrid rocket engines occupy a unique design space between solid and liquid propulsion, offering <strong>throttleability, restart capability, and improved safety</strong> over purely solid systems while avoiding some of the complexity of full liquid engines.
+      </p>
+      <p>
+        My research investigates the fundamental combustion and fluid dynamics that govern HRE performance — including fuel regression rate modeling, oxidizer injection effects, and combustion efficiency under varied operating conditions.
+      </p>
+      <ul class="topic-list">
+        <li>Fuel regression rate characterization</li>
+        <li>Oxidizer-fuel mixing and combustion efficiency</li>
+        <li>Combustion instability analysis</li>
+        <li>Scaling laws for hybrid motor design</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="research-block">
+    <div class="block-meta">
+      <div class="block-id">// SFRJ-01</div>
+      <h3>Solid Fuel Ramjets</h3>
+      <div class="block-tag">Active Research</div>
+    </div>
+    <div class="block-content">
+      <p>
+        Solid fuel ramjets represent a compelling propulsion architecture for sustained supersonic flight — using ram air as the oxidizer source and a solid fuel grain as the energy source, eliminating the need to carry an onboard oxidizer.
+      </p>
+      <p>
+        My work explores the <strong>inlet-combustor coupling, fuel grain geometry effects, and flight envelope performance</strong> of SFRJ systems, with particular interest in combustion behavior across varying flight Mach numbers and altitudes.
+      </p>
+      <ul class="topic-list">
+        <li>Inlet aerodynamics and air capture efficiency</li>
+        <li>Solid fuel combustion in air-breathing flow</li>
+        <li>Fuel port geometry and regression uniformity</li>
+        <li>Performance modeling across flight envelopes</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- SDL -->
+<section id="sdl">
+  <div class="section-label">// space dynamics lab</div>
+  <h2>Engineering Work</h2>
+  <div class="sdl-card">
+    <p>
+      At Space Dynamics Lab, I contribute to propulsion engineering efforts that bridge the gap between research and operational systems. My role spans design support, analysis, and testing — applying the analytical rigor developed through PhD research to real mission needs.
+    </p>
+    <p>
+      This dual role provides a unique perspective: fundamental research informs engineering decisions, and engineering constraints sharpen research priorities. The interplay between the two environments is central to how I approach propulsion problems.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="home.html">Home</a>
+    <a href="CV.html">CV</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="background.js"></script>
+</body>
+</html>

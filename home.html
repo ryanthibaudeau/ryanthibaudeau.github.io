@@ -1,1 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ryan Thibaudeau — Propulsion Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c10;
+      --bg2: rgba(13,21,32,0.88);
+      --surface: rgba(17,25,35,0.85);
+      --border: #1e2d3d;
+      --accent: #e85d26;
+      --accent2: #f5a623;
+      --cyan: #3dd6f5;
+      --text: #c8d8e8;
+      --text-dim: #5a7a9a;
+      --text-bright: #eaf2ff;
+      --mono: 'Share Tech Mono', monospace;
+      --head: 'Rajdhani', sans-serif;
+      --body: 'Barlow', sans-serif;
+    }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; background: #080c10; }
+
+    body {
+      background: transparent;
+      color: var(--text);
+      font-family: var(--body);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID OVERLAY ── */
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      height: 60px;
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-bright); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 10vw;
+      z-index: 1;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      animation: fadeUp 1s ease both;
+    }
+
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-label::before {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--head);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 700;
+      line-height: 0.95;
+      color: var(--text-bright);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 .last { color: var(--accent); }
+
+    .hero-title-line {
+      font-family: var(--head);
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      margin-bottom: 2rem;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 540px;
+      margin-bottom: 3rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.85rem 2rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .btn-primary:hover {
+      background: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--cyan);
+      background: transparent;
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--cyan);
+      transition: background 0.2s, color 0.2s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .btn-secondary:hover {
+      background: rgba(61,214,245,0.1);
+    }
+
+    /* ── HERO SIDE DECORATION ── */
+    .hero-deco {
+      position: absolute;
+      right: 8vw;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 320px;
+      height: 320px;
+      opacity: 0.15;
+      animation: spinSlow 40s linear infinite;
+    }
+
+    .hero-deco svg { width: 100%; height: 100%; }
+
+    .hero-stats {
+      position: absolute;
+      right: 8vw;
+      bottom: 12vh;
+      display: flex;
+      gap: 3rem;
+      animation: fadeUp 1.2s 0.4s ease both;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--head);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* ── SECTION SHARED ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 10vw;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-family: var(--head);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 3rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px; left: 0;
+      width: 60%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    /* ── ABOUT STRIP ── */
+    #about {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .about-text p strong {
+      color: var(--text-bright);
+      font-weight: 600;
+    }
+
+    .role-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .role-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .role-card:hover {
+      background: #151f2e;
+      border-left-color: var(--cyan);
+    }
+
+    .role-card .org {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .role-card .title {
+      font-family: var(--head);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+
+    .role-card .sub {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+    }
+
+    /* ── RESEARCH ── */
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .research-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+
+    .research-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .research-card:hover { transform: translateY(-4px); border-color: #2e4060; }
+    .research-card:hover::before { transform: scaleX(1); }
+
+    .card-icon {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+    }
+
+    .research-card h3 {
+      font-family: var(--head);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.75rem;
+    }
+
+    .research-card p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text-dim);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 10vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg2);
+    }
+
+    footer .copy {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    footer .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    footer a {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--cyan); }
+
+    /* ── SCAN LINE ── */
+    .scanline {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: scan 8s linear infinite;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spinSlow {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    @keyframes scan {
+      0% { top: -10px; }
+      100% { top: 100vh; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      section { padding: 4rem 6vw; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-deco, .hero-stats { display: none; }
+      #hero { padding: 0 6vw; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<nav>
+  <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="CV.html">CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-label">Propulsion Engineer &amp; PhD Researcher</div>
+    <h1>Ryan<br><span class="last">Thibaudeau</span></h1>
+    <div class="hero-title-line">Utah State University · Space Dynamics Lab</div>
+    <p class="hero-desc">
+      Advancing the science of chemical propulsion through research in
+      hybrid rocket engines and solid fuel ramjet systems. Bridging
+      fundamental research with real-world propulsion engineering.
+    </p>
+    <div class="hero-ctas">
+      <a href="research.html" class="btn-primary">View Research</a>
+      <a href="CV.html" class="btn-secondary">Download CV</a>
+    </div>
+  </div>
+
+  <!-- Decorative ring -->
+  <div class="hero-deco">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="90" stroke="#3dd6f5" stroke-width="0.5" stroke-dasharray="4 8"/>
+      <circle cx="100" cy="100" r="70" stroke="#e85d26" stroke-width="0.5" stroke-dasharray="2 6"/>
+      <circle cx="100" cy="100" r="50" stroke="#3dd6f5" stroke-width="0.5"/>
+      <line x1="10" y1="100" x2="190" y2="100" stroke="#3dd6f5" stroke-width="0.5" opacity="0.5"/>
+      <line x1="100" y1="10" x2="100" y2="190" stroke="#3dd6f5" stroke-width="0.5" opacity="0.5"/>
+      <circle cx="100" cy="10" r="3" fill="#e85d26"/>
+      <circle cx="190" cy="100" r="3" fill="#3dd6f5"/>
+    </svg>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Active Roles</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">HRE</div>
+      <div class="stat-label">Hybrid Rockets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">SFRJ</div>
+      <div class="stat-label">Ramjets</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="section-label">// about</div>
+      <h2>Who I Am</h2>
+      <p>
+        I'm a propulsion engineer and PhD researcher at <strong>Utah State University's
+        Propulsion Research Laboratory</strong>, where my work centers on advancing
+        chemical propulsion systems — particularly hybrid rocket engines and
+        solid fuel ramjets.
+      </p>
+      <p>
+        Alongside my academic work, I contribute to propulsion development at
+        <strong>Space Dynamics Lab</strong>, applying research insights to real engineering
+        problems and mission-critical systems.
+      </p>
+      <p>
+        My passion lies in understanding combustion dynamics, fuel regression,
+        and the fluid-thermal interactions that define propulsion performance
+        at the boundary of what's possible.
+      </p>
+    </div>
+
+    <div class="role-cards">
+      <div class="role-card">
+        <div class="org">Utah State University</div>
+        <div class="title">PhD Researcher</div>
+        <div class="sub">Propulsion Research Laboratory (PRL)</div>
+      </div>
+      <div class="role-card">
+        <div class="org">Space Dynamics Lab</div>
+        <div class="title">Propulsion Engineer</div>
+        <div class="sub">Student Engineering Assistant</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH PREVIEW -->
+<section id="research-preview">
+  <div class="section-label">// research focus</div>
+  <h2>Core Research Areas</h2>
+  <div class="research-grid">
+    <div class="research-card">
+      <div class="card-icon">// HRE-01</div>
+      <h3>Hybrid Rocket Engines</h3>
+      <p>Investigating fuel regression behavior, combustion stability, and oxidizer-fuel interaction in hybrid propulsion systems for next-generation launch vehicles.</p>
+    </div>
+    <div class="research-card">
+      <div class="card-icon">// SFRJ-01</div>
+      <h3>Solid Fuel Ramjets</h3>
+      <p>Exploring inlet-driven combustion, fuel grain geometry optimization, and flight envelope performance of solid fuel ramjet propulsion architectures.</p>
+    </div>
+    <div class="research-card">
+      <div class="card-icon">// CHEM-01</div>
+      <h3>Chemical Propulsion</h3>
+      <p>Broad investigation of chemical propulsion fundamentals — thermodynamics, combustion chemistry, and system-level performance modeling and testing.</p>
+    </div>
+  </div>
+  <div style="margin-top: 2.5rem;">
+    <a href="research.html" class="btn-primary">See All Research →</a>
+  </div>
+</section>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="research.html">Research</a>
+    <a href="CV.html">CV</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="background.js"></script>
+</body>
+</html>
