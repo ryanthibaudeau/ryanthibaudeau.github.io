@@ -1,1 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio — Ryan Thibaudeau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c10;
+      --bg2: rgba(13,21,32,0.88);
+      --surface: rgba(17,25,35,0.85);
+      --border: #1e2d3d;
+      --accent: #e85d26;
+      --accent2: #f5a623;
+      --cyan: #3dd6f5;
+      --text: #c8d8e8;
+      --text-dim: #5a7a9a;
+      --text-bright: #eaf2ff;
+      --mono: 'Share Tech Mono', monospace;
+      --head: 'Rajdhani', sans-serif;
+      --body: 'Barlow', sans-serif;
+    }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: #080c10; }
+    body { background: transparent; color: var(--text); font-family: var(--body); font-weight: 300; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 60px;
+      background: rgba(8,12,16,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: var(--mono); font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.1em; text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim);
+      text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-links a.active, .nav-links a:hover { color: var(--text-bright); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.2s;
+    }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      position: relative; z-index: 1;
+      padding: 8rem 10vw 4rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .page-label {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+      letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .page-hero h1 {
+      font-family: var(--head); font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700; color: var(--text-bright); margin-bottom: 1rem;
+    }
+    .page-hero p { font-size: 1rem; line-height: 1.75; color: var(--text); max-width: 600px; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      position: relative; z-index: 1;
+      padding: 1.5rem 10vw;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;
+    }
+    .filter-label {
+      font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim);
+      letter-spacing: 0.2em; text-transform: uppercase; margin-right: 0.5rem;
+    }
+    .filter-btn {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-dim);
+      background: transparent; border: 1px solid var(--border);
+      padding: 0.4rem 1rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(232,93,38,0.08); }
+
+    /* ── MAIN CONTENT ── */
+    main { position: relative; z-index: 1; padding: 4rem 10vw 6rem; }
+
+    /* ── CATEGORY SECTION ── */
+    .category-section { margin-bottom: 4.5rem; }
+    .category-section.hidden { display: none; }
+
+    .category-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 2rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .category-id {
+      font-family: var(--mono); font-size: 0.6rem; color: var(--accent);
+      letter-spacing: 0.25em; text-transform: uppercase;
+    }
+    .category-header h2 {
+      font-family: var(--head); font-size: 1.6rem; font-weight: 700;
+      color: var(--text-bright);
+    }
+    .category-count {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+      margin-left: auto;
+    }
+
+    /* ── PROJECT GRID ── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--card-color, var(--accent)), transparent);
+      transform: scaleX(0); transition: transform 0.3s;
+    }
+    .project-card:hover { transform: translateY(-3px); border-color: #2e4060; }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    /* Status badge */
+    .card-status {
+      position: absolute; top: 1.25rem; right: 1.25rem;
+      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 0.2rem 0.6rem;
+      border: 1px solid currentColor;
+    }
+    .status-active   { color: #4ade80; }
+    .status-complete { color: var(--text-dim); }
+    .status-ongoing  { color: var(--accent2); }
+
+    .card-top {}
+    .card-id {
+      font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim);
+      letter-spacing: 0.2em; margin-bottom: 0.4rem;
+    }
+    .card-title {
+      font-family: var(--head); font-size: 1.2rem; font-weight: 600;
+      color: var(--text-bright); line-height: 1.2; padding-right: 4rem;
+    }
+
+    .card-desc {
+      font-size: 0.88rem; line-height: 1.75; color: var(--text-dim);
+      flex: 1;
+    }
+
+    /* Results block */
+    .card-results {
+      background: rgba(0,0,0,0.25);
+      border-left: 2px solid var(--card-color, var(--accent));
+      padding: 0.75rem 1rem;
+    }
+    .results-label {
+      font-family: var(--mono); font-size: 0.55rem; color: var(--text-dim);
+      letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .results-text {
+      font-size: 0.83rem; color: var(--text); line-height: 1.6;
+    }
+
+    /* Tags */
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-dim);
+      border: 1px solid var(--border); padding: 0.18rem 0.5rem;
+    }
+
+    /* ── TEMPLATE NOTE ── */
+    .template-note {
+      position: relative; z-index: 1;
+      margin: 0 10vw 4rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.25rem 1.75rem;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .template-note .tn-icon {
+      font-family: var(--mono); font-size: 1.2rem; color: var(--accent2); flex-shrink: 0;
+    }
+    .template-note p {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim);
+      line-height: 1.6; letter-spacing: 0.05em;
+    }
+    .template-note strong { color: var(--accent2); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border); padding: 2rem 10vw;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg2);
+    }
+    footer .copy { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
+    footer .footer-links { display: flex; gap: 1.5rem; }
+    footer a { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+    footer a:hover { color: var(--cyan); }
+
+    /* ── SCANLINE ── */
+    .scanline {
+      position: fixed; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: scan 8s linear infinite; opacity: 0.15; pointer-events: none; z-index: 200;
+    }
+    @keyframes scan { 0% { top: -10px; } 100% { top: 100vh; } }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      main { padding: 3rem 6vw 4rem; }
+      .page-hero, .filter-bar { padding-left: 6vw; padding-right: 6vw; }
+      .template-note { margin: 0 6vw 3rem; }
+      footer { padding: 2rem 6vw; }
+    }
+  </style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<nav>
+  <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="portfolio.html" class="active">Portfolio</a></li>
+    <li><a href="CV.html">CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">// portfolio</div>
+  <h1>Projects & Work</h1>
+  <p>A collection of research experiments, engineering analyses, software tools, and academic contributions spanning hybrid rocket propulsion and solid fuel ramjet systems.</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+  <button class="filter-btn" onclick="filterCards('experiment', this)">Experiments</button>
+  <button class="filter-btn" onclick="filterCards('analysis', this)">Design & Analysis</button>
+  <button class="filter-btn" onclick="filterCards('software', this)">Software</button>
+  <button class="filter-btn" onclick="filterCards('publication', this)">Publications</button>
+</div>
+
+<!-- TEMPLATE NOTE -->
+<div class="template-note">
+  <div class="tn-icon">//</div>
+  <p>
+    <strong>Template mode:</strong> Replace the placeholder cards below with your real projects.
+    Each card has a title, description, key results block, tags, and a status badge.
+    Duplicate a card block to add more — the grid handles layout automatically.
+  </p>
+</div>
+
+<main>
+
+  <!-- ── EXPERIMENTS ── -->
+  <div class="category-section" data-category="experiment">
+    <div class="category-header">
+      <span class="category-id">// EXP</span>
+      <h2>Research Experiments & Test Campaigns</h2>
+      <span class="category-count">2 entries</span>
+    </div>
+    <div class="project-grid">
+
+      <!-- CARD: Experiment 1 -->
+      <div class="project-card" style="--card-color: #e85d26;">
+        <span class="card-status status-active">Active</span>
+        <div class="card-top">
+          <div class="card-id">// EXP-001</div>
+          <div class="card-title">HRE Fuel Regression Rate Characterization</div>
+        </div>
+        <p class="card-desc">
+          [Replace with your project description. Describe the experimental objective, test setup, propellant combination, and operating conditions. What question were you trying to answer?]
+        </p>
+        <div class="card-results">
+          <div class="results-label">// Key Results</div>
+          <div class="results-text">[Add your key findings here — measured regression rates, performance metrics, or notable observations from the test campaign.]</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">HRE</span>
+          <span class="tag">Combustion</span>
+          <span class="tag">Regression Rate</span>
+          <span class="tag">[Add Tag]</span>
+        </div>
+      </div>
+
+      <!-- CARD: Experiment 2 -->
+      <div class="project-card" style="--card-color: #e85d26;">
+        <span class="card-status status-ongoing">Ongoing</span>
+        <div class="card-top">
+          <div class="card-id">// EXP-002</div>
+          <div class="card-title">SFRJ Combustion Stability Testing</div>
+        </div>
+        <p class="card-desc">
+          [Replace with your project description. Describe the experimental objective, test setup, and the flight or ground-test conditions being simulated.]
+        </p>
+        <div class="card-results">
+          <div class="results-label">// Key Results</div>
+          <div class="results-text">[Add your key findings — pressure traces, stability margins, combustion efficiency numbers, or qualitative observations.]</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">SFRJ</span>
+          <span class="tag">Stability</span>
+          <span class="tag">Air-Breathing</span>
+          <span class="tag">[Add Tag]</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── DESIGN & ANALYSIS ── -->
+  <div class="category-section" data-category="analysis">
+    <div class="category-header">
+      <span class="category-id">// ANA</span>
+      <h2>Design & Analysis Work</h2>
+      <span class="category-count">2 entries</span>
+    </div>
+    <div class="project-grid">
+
+      <!-- CARD: Analysis 1 -->
+      <div class="project-card" style="--card-color: #3dd6f5;">
+        <span class="card-status status-complete">Complete</span>
+        <div class="card-top">
+          <div class="card-id">// ANA-001</div>
+          <div class="card-title">Hybrid Motor Performance Modeling</div>
+        </div>
+        <p class="card-desc">
+          [Describe the analysis — what system were you modeling, what tools or methods did you use (analytical, CFD, 1D performance code), and what was the engineering goal?]
+        </p>
+        <div class="card-results">
+          <div class="results-label">// Key Results</div>
+          <div class="results-text">[Add outcomes — predicted Isp, thrust curves, mass flow predictions, or comparison to experimental data.]</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">Performance Model</span>
+          <span class="tag">Thermochemistry</span>
+          <span class="tag">MATLAB</span>
+          <span class="tag">[Add Tag]</span>
+        </div>
+      </div>
+
+      <!-- CARD: Analysis 2 -->
+      <div class="project-card" style="--card-color: #3dd6f5;">
+        <span class="card-status status-complete">Complete</span>
+        <div class="card-top">
+          <div class="card-id">// ANA-002</div>
+          <div class="card-title">SFRJ Inlet Aerodynamic Analysis</div>
+        </div>
+        <p class="card-desc">
+          [Describe the analysis — inlet geometry, flow conditions, design trade space explored. What design decisions did the analysis inform?]
+        </p>
+        <div class="card-results">
+          <div class="results-label">// Key Results</div>
+          <div class="results-text">[Add outcomes — mass capture efficiency, total pressure recovery, Mach contours, or design recommendations.]</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">Aerodynamics</span>
+          <span class="tag">CFD</span>
+          <span class="tag">Inlet Design</span>
+          <span class="tag">[Add Tag]</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SOFTWARE & SIMULATION ── -->
+  <div class="category-section" data-category="software">
+    <div class="category-header">
+      <span class="category-id">// SFT</span>
+      <h2>Software & Simulation Tools</h2>
+      <span class="category-count">1 entry</span>
+    </div>
+    <div class="project-grid">
+
+      <!-- CARD: Software 1 -->
+      <div class="project-card" style="--card-color: #f5a623;">
+        <span class="card-status status-ongoing">Ongoing</span>
+        <div class="card-top">
+          <div class="card-id">// SFT-001</div>
+          <div class="card-title">Propulsion Performance Simulation Tool</div>
+        </div>
+        <p class="card-desc">
+          [Describe the tool — what does it simulate, what inputs does it take, what outputs does it produce? What problem does it solve that existing tools don't?]
+        </p>
+        <div class="card-results">
+          <div class="results-label">// Key Results</div>
+          <div class="results-text">[Describe the tool's capabilities — accuracy vs. benchmark data, computation time, or the specific workflows it enables.]</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag">MATLAB</span>
+          <span class="tag">Simulation</span>
+          <span class="tag">[Add Tag]</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PUBLICATIONS ── -->
+  <div class="category-section" data-category="publication">
+    <div class="category-header">
+      <span class="category-id">// PUB</span>
+      <h2>Academic Papers & Presentations</h2>
+      <span class="category-count">1 entry</span>
+    </div>
+    <div class="project-grid">
+
+      <!-- CARD: Publication 1 -->
+      <div class="project-card" style="--card-color: #a78bfa;">
+        <span class="card-status status-complete">Published</span>
+        <div class="card-top">
+          <div class="card-id">// PUB-001</div>
+          <div class="card-title">[Paper or Presentation Title]</div>
+        </div>
+        <p class="card-desc">
+          [Conference or journal name, year. Add a one or two sentence abstract summary — what did the paper investigate and what did it contribute?]
+        </p>
+        <div class="card-results">
+          <div class="results-label">// Key Contribution</div>
+          <div class="results-text">[What was the main finding or contribution? What does the community now know or have as a result of this work?]</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">AIAA</span>
+          <span class="tag">HRE</span>
+          <span class="tag">[Venue]</span>
+          <span class="tag">[Year]</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="home.html">Home</a>
+    <a href="research.html">Research</a>
+    <a href="CV.html">CV</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="background.js"></script>
+
+<script>
+  function filterCards(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.category-section').forEach(section => {
+      if (category === 'all' || section.dataset.category === category) {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
+      }
+    });
+  }
+</script>
+</body>
+</html>
