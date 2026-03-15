@@ -398,6 +398,54 @@
       line-height: 1.7;
       color: var(--text-dim);
     }
+    .research-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 0;
+      align-items: center;
+    }
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1rem;
+      color: var(--accent);
+      font-size: 1.2rem;
+      opacity: 0.6;
+    }
+    .flow-arrow::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 20px;
+      background: var(--accent);
+      opacity: 0.3;
+      margin-bottom: 0.25rem;
+    }
+    .flow-arrow::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 20px;
+      background: var(--accent);
+      opacity: 0.3;
+      margin-top: 0.25rem;
+    }
+    @media (max-width: 768px) {
+      .research-grid {
+        grid-template-columns: 1fr;
+      }
+      .flow-arrow {
+        flex-direction: row;
+        padding: 0.5rem 0;
+        justify-content: center;
+      }
+      .flow-arrow::before, .flow-arrow::after {
+        width: 20px;
+        height: 1px;
+        margin: 0 0.25rem;
+      }
+    }
 
     /* ── FOOTER ── */
     footer {
@@ -494,12 +542,14 @@
     <div class="hero-title-line">Utah State University · Space Dynamics Lab</div>
     <p class="hero-desc">
       Advancing the science of chemical propulsion through research in
-      hybrid rocket engines and solid fuel ramjet systems. Bridging
+      hybrid rocket engines, solid fuel ramjets, and in-space satellite systems. Bridging
       fundamental research with real-world propulsion engineering.
+      Pioneering innovative additive manufacturing solutions for
+      next-generation in-space propulsion components and systems.
     </p>
     <div class="hero-ctas">
-      <a href="research.html" class="btn-primary">View Research</a>
-      <a href="CV.html" class="btn-secondary">Download CV</a>
+      <a href="portfolio.html" class="btn-primary">View My Work</a>
+      <a href="CV.html" class="btn-secondary">View CV</a>
     </div>
   </div>
 
@@ -518,16 +568,16 @@
 
   <div class="hero-stats">
     <div class="stat">
-      <div class="stat-num">2</div>
-      <div class="stat-label">Active Roles</div>
+      <div class="stat-num" id="stat-pub-count">10+</div>
+      <div class="stat-label">Publications</div>
     </div>
     <div class="stat">
-      <div class="stat-num">HRE</div>
-      <div class="stat-label">Hybrid Rockets</div>
+      <div class="stat-num">$8M</div>
+      <div class="stat-label">Funding Awarded</div>
     </div>
     <div class="stat">
-      <div class="stat-num">SFRJ</div>
-      <div class="stat-label">Ramjets</div>
+      <div class="stat-num">1</div>
+      <div class="stat-label">Patent Pending</div>
     </div>
   </div>
 </section>
@@ -545,14 +595,14 @@
         solid fuel ramjets.
       </p>
       <p>
-        Alongside my academic work, I contribute to propulsion development at
-        <strong>Space Dynamics Lab</strong>, applying research insights to real engineering
+        Alongside my academic work, I contribute to propulsion development and additive manufacturing innovation at
+        <strong>Space Dynamics Laboratory</strong>, applying research insights to real engineering
         problems and mission-critical systems.
       </p>
       <p>
         My passion lies in understanding combustion dynamics, fuel regression,
         and the fluid-thermal interactions that define propulsion performance
-        at the boundary of what's possible.
+        at the boundary of what's possible — across both atmospheric and in-space domains.
       </p>
     </div>
 
@@ -563,37 +613,39 @@
         <div class="sub">Propulsion Research Laboratory (PRL)</div>
       </div>
       <div class="role-card">
-        <div class="org">Space Dynamics Lab</div>
+        <div class="org">Space Dynamics Laboratory</div>
         <div class="title">Propulsion Engineer</div>
-        <div class="sub">Student Engineering Assistant</div>
+        <div class="title" style="margin-top:0.25rem;">Additive Manufacturing Applications Engineer</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- RESEARCH PREVIEW -->
+<!-- HOW I OPERATE -->
 <section id="research-preview">
-  <div class="section-label">// research focus</div>
-  <h2>Core Research Areas</h2>
+  <div class="section-label">// how i operate</div>
+  <h2>How I Operate</h2>
   <div class="research-grid">
     <div class="research-card">
-      <div class="card-icon">// HRE-01</div>
-      <h3>Hybrid Rocket Engines</h3>
-      <p>Investigating fuel regression behavior, combustion stability, and oxidizer-fuel interaction in hybrid propulsion systems for next-generation launch vehicles.</p>
+      <div class="card-icon">// 01</div>
+      <h3>Understand</h3>
+      <p><em>Deep science first.</em> Knowing the fundamentals well enough to know where they break.</p>
     </div>
+    <div class="flow-arrow">→</div>
     <div class="research-card">
-      <div class="card-icon">// SFRJ-01</div>
-      <h3>Solid Fuel Ramjets</h3>
-      <p>Exploring inlet-driven combustion, fuel grain geometry optimization, and flight envelope performance of solid fuel ramjet propulsion architectures.</p>
+      <div class="card-icon">// 02</div>
+      <h3>Build</h3>
+      <p><em>Real hardware, real constraints.</em> Designed, simulated, tested, and delivered to mission requirements.</p>
     </div>
+    <div class="flow-arrow">→</div>
     <div class="research-card">
-      <div class="card-icon">// CHEM-01</div>
-      <h3>Chemical Propulsion</h3>
-      <p>Broad investigation of chemical propulsion fundamentals — thermodynamics, combustion chemistry, and system-level performance modeling and testing.</p>
+      <div class="card-icon">// 03</div>
+      <h3>Advance</h3>
+      <p><em>Push the field forward.</em> Novel solutions at the intersection of research and engineering — where published research meets patent-pending innovation.</p>
     </div>
   </div>
   <div style="margin-top: 2.5rem;">
-    <a href="research.html" class="btn-primary">See All Research →</a>
+    <a href="portfolio.html" class="btn-primary">View My Work →</a>
   </div>
 </section>
 
@@ -606,6 +658,19 @@
   </div>
 </footer>
 
+<script>
+(async function() {
+  try {
+    const res = await fetch('https://gist.githubusercontent.com/ryanthibaudeau/dc3b698a62e01a73e40c72f272ca821c/raw/scholar_cache.json?t=' + Date.now());
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.total_works) {
+      const el = document.getElementById('stat-pub-count');
+      if (el) el.textContent = data.total_works + '+';
+    }
+  } catch(e) {}
+})();
+</script>
 <canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
 <script src="background.js"></script>
 </body>
