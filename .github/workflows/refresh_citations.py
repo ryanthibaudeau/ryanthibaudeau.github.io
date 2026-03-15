@@ -21,7 +21,9 @@ for group in summary.get('group', []):
 
 print(f"Found {len(put_codes)} works, fetching full details...")
 
-# Fetch each work individually to get short-description
+# Keywords for the three known problematic papers
+debug_titles = ['cold', 'qualification', 'thesis', 'dissertation', 'ramjet', 'master']
+
 affiliations = {}
 for pc in put_codes:
     result = subprocess.run(
@@ -35,6 +37,12 @@ for pc in put_codes:
         title = work.get('title', {}).get('title', {}).get('value', '')
         ext_ids = work.get('external-ids', {}).get('external-id', [])
         doi = next((e['external-id-value'] for e in ext_ids if e['external-id-type'] == 'doi'), None)
+
+        # Debug: print full description for problem papers
+        if any(kw in title.lower() for kw in debug_titles):
+            print(f"\n  DEBUG [{pc}] {title[:70]}")
+            print(f"  desc repr: {repr(desc[-100:]) if len(desc) > 100 else repr(desc)}")
+
         match = re.search(r'Affiliation:\s*(\w+)', desc, re.IGNORECASE)
         if match:
             aff = match.group(1).upper()
@@ -43,8 +51,14 @@ for pc in put_codes:
             print(f"  [{aff}] {title[:70]}")
         else:
             print(f"  [---] {title[:70]}")
+            # Extra debug for any untagged paper - show last 50 chars of desc
+            if desc:
+                print(f"       tail: {repr(desc[-60:])}")
+            else:
+                print(f"       desc is EMPTY")
     except Exception as e:
         print(f"  Error on put-code {pc}: {e}")
+        print(f"  Raw response: {result.stdout[:200]}")
 
 # Scholar stats
 cited_by = scholar.get('cited_by', {})
