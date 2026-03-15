@@ -84,6 +84,10 @@
     .pub-meta-item span{color:var(--text);}
     .pub-doi{font-family:var(--mono);font-size:0.62rem;color:var(--cyan);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;}
     .pub-doi:hover{color:var(--accent2);}
+    .cite-badge{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.62rem;color:var(--accent2);border:1px solid rgba(245,166,35,0.3);padding:0.15rem 0.5rem;}
+    .scholar-btn{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);padding:0.6rem 1.1rem;transition:border-color 0.2s,color 0.2s;}
+    .scholar-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+    .cache-note{font-family:var(--mono);font-size:0.58rem;color:var(--text-dim);letter-spacing:0.08em;margin-top:0.5rem;}
     footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem 10vw;display:flex;justify-content:space-between;align-items:center;background:var(--bg2);}
     footer .copy{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
     footer .footer-links{display:flex;gap:1.5rem;}
@@ -119,7 +123,8 @@
     <h1>Publications</h1>
     <p>Academic papers, conference proceedings, and presentations. Pulled live from ORCID — updated automatically whenever new work is added.</p>
   </div>
-  <a class="orcid-badge" href="https://orcid.org/0009-0000-6483-2373" target="_blank" rel="noopener">
+  <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-end;">
+    <a class="orcid-badge" href="https://orcid.org/0009-0000-6483-2373" target="_blank" rel="noopener">
     <div class="orcid-icon">iD</div>
     <div class="orcid-text">ORCID Profile<span class="orcid-id">0009-0000-6483-2373</span></div>
   </a>
@@ -127,6 +132,10 @@
 
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total Works</div></div>
+  <div class="stats-divider"></div>
+  <div class="stat-item"><div class="stat-num" id="stat-citations">—</div><div class="stat-label">Total Citations</div></div>
+  <div class="stats-divider"></div>
+  <div class="stat-item"><div class="stat-num" id="stat-hindex">—</div><div class="stat-label">h-index</div></div>
   <div class="stats-divider"></div>
   <div class="stat-item"><div class="stat-num" id="stat-journals">—</div><div class="stat-label">Journal Articles</div></div>
   <div class="stats-divider"></div>
@@ -171,6 +180,9 @@
 <script>
 const ORCID_ID='0009-0000-6483-2373';
 const API_BASE='https://pub.orcid.org/v3.0';
+const GIST_ID='dc3b698a62e01a73e40c72f272ca821c';
+const GIST_URL=`https://gist.githubusercontent.com/ryanthibaudeau/${GIST_ID}/raw/scholar_cache.json`;
+let scholarCache=null;
 
 const TYPE_MAP={
   'journal-article':        {label:'Journal Articles',       cls:'type-journal',    order:1},
@@ -189,6 +201,20 @@ function getDOI(w){try{const ids=w['work-summary']?.[0]?.['external-ids']?.['ext
 function getJournal(w){try{return w['work-summary']?.[0]?.['journal-title']?.value||null;}catch{return null;}}
 function getType(w){try{return w['work-summary']?.[0]?.type||'other';}catch{return 'other';}}
 function fmtType(t){return t.replace(/[_-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
+
+function getCitations(title){
+  if(!scholarCache||!scholarCache.papers)return null;
+  const key=title.toLowerCase().substring(0,60);
+  // Try exact prefix match first
+  if(scholarCache.papers[key])return scholarCache.papers[key].citations;
+  // Fuzzy match - find paper whose key overlaps significantly
+  const keys=Object.keys(scholarCache.papers);
+  for(const k of keys){
+    const overlap=key.split('').filter((c,i)=>c===k[i]).length;
+    if(overlap>40)return scholarCache.papers[k].citations;
+  }
+  return null;
+}
 
 function pubHTML(work, showBadge){
   const s=work['work-summary']?.[0]; if(!s)return '';
@@ -259,12 +285,35 @@ function setState(state){
   else document.getElementById(state).style.display='block';
 }
 
+async function loadScholarCache(){
+  try{
+    const res=await fetch(GIST_URL+'?t='+Date.now());
+    if(!res.ok)return;
+    const data=await res.json();
+    if(data&&data.total_citations!==undefined){
+      scholarCache=data;
+      document.getElementById('stat-citations').textContent=data.total_citations||'—';
+      document.getElementById('stat-hindex').textContent=data.h_index||'—';
+      if(data.updated){
+        const d=new Date(data.updated);
+        const note=document.getElementById('cache-note');
+        note.textContent=`Citations updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+        note.style.display='block';
+      }
+    }
+  }catch(e){console.warn('Scholar cache unavailable:',e);}
+}
+
 async function load(){
   setState('loading-state');
   try{
-    const res=await fetch(`${API_BASE}/${ORCID_ID}/works`,{headers:{'Accept':'application/json'}});
-    if(!res.ok)throw new Error(`ORCID API returned ${res.status}`);
-    const data=await res.json();
+    // Fetch ORCID and Scholar cache in parallel
+    const [orcidRes] = await Promise.all([
+      fetch(`${API_BASE}/${ORCID_ID}/works`,{headers:{'Accept':'application/json'}}),
+      loadScholarCache()
+    ]);
+    if(!orcidRes.ok)throw new Error(`ORCID API returned ${orcidRes.status}`);
+    const data=await orcidRes.json();
     const groups=data?.group||[];
     if(!groups.length){setState('empty-state');return;}
 
