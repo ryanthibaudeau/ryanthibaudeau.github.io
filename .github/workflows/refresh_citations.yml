@@ -9,68 +9,96 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Scholar data from SerpAPI and update Gist
+      - name: Fetch Scholar + ORCID affiliation data and update Gist
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
           GIST_ID: dc3b698a62e01a73e40c72f272ca821c
           SCHOLAR_ID: v8wAa0oAAAAJ
+          ORCID_ID: 0009-0000-6483-2373
         run: |
           echo "Fetching Google Scholar profile from SerpAPI..."
+          SCHOLAR=$(curl -s "https://serpapi.com/search.json?engine=google_scholar_author&author_id=${SCHOLAR_ID}&api_key=${SERPAPI_KEY}&num=100")
 
-          RESPONSE=$(curl -s "https://serpapi.com/search.json?engine=google_scholar_author&author_id=${SCHOLAR_ID}&api_key=${SERPAPI_KEY}&num=100")
+          echo "Fetching ORCID works list for put-codes..."
+          WORKS=$(curl -s -H "Accept: application/json" "https://pub.orcid.org/v3.0/${ORCID_ID}/works")
 
-          echo "Checking response..."
-          echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print('Total citations:', d.get('cited_by',{}).get('table',[{}])[0].get('citations',{}).get('all','unknown'))"
-
-          # Build cache JSON with timestamp, total stats, and per-paper citations
-          CACHE=$(echo "$RESPONSE" | python3 -c "
+          echo "Fetching full work details for affiliation tags..."
+          PUT_CODES=$(echo "$WORKS" | python3 -c "
           import sys, json
+          data = json.load(sys.stdin)
+          codes = []
+          for group in data.get('group', []):
+            for summary in group.get('work-summary', []):
+              pc = summary.get('put-code')
+              if pc:
+                codes.append(str(pc))
+          # Fetch in batches of 50 (ORCID limit)
+          print(','.join(codes[:50]))
+          ")
+
+          FULL_WORKS=$(curl -s -H "Accept: application/json" "https://pub.orcid.org/v3.0/${ORCID_ID}/works/${PUT_CODES}")
+
+          echo "Building cache..."
+          CACHE=$(python3 -c "
+          import sys, json, re
           from datetime import datetime, timezone
 
-          data = json.load(sys.stdin)
+          scholar = json.loads('''$(echo "$SCHOLAR" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")''')
+          full_works_raw = json.loads('''$(echo "$FULL_WORKS" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")''')
 
-          cited_by = data.get('cited_by', {})
+          scholar_data = json.loads(scholar)
+          full_works_data = json.loads(full_works_raw)
+
+          # Scholar stats
+          cited_by = scholar_data.get('cited_by', {})
           table = cited_by.get('table', [])
-
           total_citations = 0
           h_index = 0
           i10_index = 0
-
           for row in table:
-              if 'citations' in row:
-                  total_citations = row['citations'].get('all', 0)
-              if 'h_index' in row:
-                  h_index = row['h_index'].get('all', 0)
-              if 'i10_index' in row:
-                  i10_index = row['i10_index'].get('all', 0)
+            if 'citations' in row: total_citations = row['citations'].get('all', 0)
+            if 'h_index' in row: h_index = row['h_index'].get('all', 0)
+            if 'i10_index' in row: i10_index = row['i10_index'].get('all', 0)
 
-          articles = data.get('articles', [])
+          # Scholar per-paper citations
           papers = {}
-          for article in articles:
-              title = article.get('title', '')
-              cited = article.get('cited_by', {}).get('value', 0)
-              link = article.get('link', '')
-              papers[title.lower()[:60]] = {
-                  'title': title,
-                  'citations': cited,
-                  'scholar_link': link
-              }
+          for article in scholar_data.get('articles', []):
+            title = article.get('title', '')
+            papers[title.lower()[:60]] = {
+              'title': title,
+              'citations': article.get('cited_by', {}).get('value', 0),
+              'scholar_link': article.get('link', '')
+            }
+
+          # ORCID affiliations from short-description
+          affiliations = {}
+          bulk = full_works_data if isinstance(full_works_data, list) else full_works_data.get('bulk', [])
+          for item in bulk:
+            work = item.get('work', item)
+            title = work.get('title', {}).get('title', {}).get('value', '')
+            desc = work.get('short-description') or ''
+            ext_ids = work.get('external-ids', {}).get('external-id', [])
+            doi = next((e['external-id-value'] for e in ext_ids if e['external-id-type'] == 'doi'), None)
+
+            match = re.search(r'Affiliation:\s*(\w+)', desc, re.IGNORECASE)
+            if match:
+              aff = match.group(1).upper()
+              key = doi if doi else title.lower()[:60]
+              affiliations[key] = aff
 
           cache = {
-              'updated': datetime.now(timezone.utc).isoformat(),
-              'total_citations': total_citations,
-              'h_index': h_index,
-              'i10_index': i10_index,
-              'papers': papers
+            'updated': datetime.now(timezone.utc).isoformat(),
+            'total_citations': total_citations,
+            'h_index': h_index,
+            'i10_index': i10_index,
+            'papers': papers,
+            'affiliations': affiliations
           }
-
           print(json.dumps(cache, indent=2))
           ")
 
-          echo "Cache built. Updating Gist..."
-
-          # Escape JSON for GitHub API
+          echo "Updating Gist..."
           PAYLOAD=$(python3 -c "
           import json, sys
           content = sys.stdin.read()
@@ -78,12 +106,11 @@ jobs:
           print(json.dumps(payload))
           " <<< "$CACHE")
 
-          # Update the Gist
           RESULT=$(curl -s -X PATCH \
             -H "Authorization: token ${GIST_TOKEN}" \
             -H "Content-Type: application/json" \
             -d "$PAYLOAD" \
             "https://api.github.com/gists/${GIST_ID}")
 
-          echo "Done. Gist updated."
+          echo "Done."
           echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print('Updated at:', d.get('updated_at','unknown'))"
