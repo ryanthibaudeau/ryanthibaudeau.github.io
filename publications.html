@@ -85,6 +85,9 @@
     .pub-doi{font-family:var(--mono);font-size:0.62rem;color:var(--cyan);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;}
     .pub-doi:hover{color:var(--accent2);}
     .cite-badge{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.62rem;color:var(--accent2);border:1px solid rgba(245,166,35,0.3);padding:0.15rem 0.5rem;}
+    .org-badge{display:inline-flex;align-items:center;font-family:var(--mono);font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.18rem 0.5rem;border:1px solid;}
+    .org-SDL{color:#3dd6f5;border-color:rgba(61,214,245,0.3);}
+    .org-USU{color:#4ade80;border-color:rgba(74,222,128,0.3);}
     .scholar-btn{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);padding:0.6rem 1.1rem;transition:border-color 0.2s,color 0.2s;}
     .scholar-btn:hover{border-color:var(--accent2);color:var(--accent2);}
     .cache-note{font-family:var(--mono);font-size:0.58rem;color:var(--text-dim);letter-spacing:0.08em;margin-top:0.5rem;}
@@ -125,10 +128,14 @@
   </div>
   <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-end;">
     <a class="orcid-badge" href="https://orcid.org/0009-0000-6483-2373" target="_blank" rel="noopener">
-    <div class="orcid-icon">iD</div>
-    <div class="orcid-text">ORCID Profile<span class="orcid-id">0009-0000-6483-2373</span></div>
-  </a>
-</div>
+      <div class="orcid-icon">iD</div>
+      <div class="orcid-text">ORCID Profile<span class="orcid-id">0009-0000-6483-2373</span></div>
+    </a>
+    <a class="scholar-btn" href="https://scholar.google.com/citations?user=v8wAa0oAAAAJ" target="_blank" rel="noopener">
+      <span class="scholar-s">G</span> Google Scholar
+    </a>
+    <div id="cache-note" class="cache-note" style="display:none;"></div>
+  </div>
 
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Total Works</div></div>
@@ -147,6 +154,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" id="tab-type" onclick="switchTab('type')">By Type <span class="tab-count" id="count-type">—</span></button>
   <button class="tab-btn" id="tab-year" onclick="switchTab('year')">By Year <span class="tab-count" id="count-year">—</span></button>
+  <button class="tab-btn" id="tab-org" onclick="switchTab('org')">By Organization <span class="tab-count" id="count-org">—</span></button>
 </div>
 
 <main>
@@ -165,6 +173,7 @@
   </div>
   <div id="view-type"></div>
   <div id="view-year"></div>
+  <div id="view-org"></div>
 </main>
 
 <footer>
@@ -190,10 +199,32 @@ const TYPE_MAP={
   'conference-abstract':    {label:'Conference Papers',      cls:'type-conference', order:2},
   'conference-poster':      {label:'Conference Papers',      cls:'type-conference', order:2},
   'dissertation':           {label:'Theses & Dissertations', cls:'type-thesis',     order:3},
+  'dissertation-thesis':    {label:'Theses & Dissertations', cls:'type-thesis',     order:3},
+  'supervised-student-publication': {label:'Theses & Dissertations', cls:'type-thesis', order:3},
   'preprint':               {label:'Preprints',              cls:'type-other',      order:4},
   'report':                 {label:'Reports & Other',        cls:'type-other',      order:5},
   'other':                  {label:'Other Works',            cls:'type-other',      order:6},
 };
+
+function getOrg(work){
+  if(!scholarCache||!scholarCache.affiliations)return null;
+  try{
+    // Try DOI first
+    const ids=work['work-summary']?.[0]?.['external-ids']?.['external-id']||[];
+    const doi=ids.find(i=>i['external-id-type']==='doi')?.['external-id-value'];
+    if(doi&&scholarCache.affiliations[doi]){
+      const aff=scholarCache.affiliations[doi];
+      return {label:aff, cls:'org-'+aff};
+    }
+    // Fallback: title match
+    const title=(work['work-summary']?.[0]?.title?.title?.value||'').toLowerCase().substring(0,60);
+    if(scholarCache.affiliations[title]){
+      const aff=scholarCache.affiliations[title];
+      return {label:aff, cls:'org-'+aff};
+    }
+  }catch(e){}
+  return null;
+}
 
 function getCat(type){return TYPE_MAP[type]||{label:'Other Works',cls:'type-other',order:99};}
 function getYear(w){try{return w['work-summary']?.[0]?.['publication-date']?.year?.value||null;}catch{return null;}}
@@ -230,6 +261,8 @@ function pubHTML(work, showBadge){
     <div class="pub-meta">
       <div class="pub-meta-item">Year <span>${year}</span></div>
       ${doi?`<div class="pub-meta-item"><a class="pub-doi" href="https://doi.org/${doi}" target="_blank" rel="noopener">DOI: ${doi}</a></div>`:''}
+      ${(()=>{const c=getCitations(title);return c!==null?`<div class="pub-meta-item"><span class="cite-badge">✦ ${c} citation${c!==1?'s':''}</span></div>`:''})()}
+      ${(()=>{const o=getOrg(work);return o?`<div class="pub-meta-item"><span class="org-badge ${o.cls}">${o.label}</span></div>`:''})()}
     </div>
   </div>`;
 }
@@ -269,15 +302,43 @@ function buildYearView(groups){
   </div>`).join('');
 }
 
+function buildOrgView(groups){
+  const byOrg={};
+  groups.forEach(w=>{
+    const o=getOrg(w);
+    const key=o?o.label:'Other';
+    if(!byOrg[key])byOrg[key]={label:key,cls:o?o.cls:'',works:[]};
+    byOrg[key].works.push(w);
+  });
+  // Sort: SDL, USU, then others
+  const order=['SDL','USU'];
+  const sorted=Object.values(byOrg).sort((a,b)=>{
+    const ai=order.indexOf(a.label); const bi=order.indexOf(b.label);
+    if(ai===-1&&bi===-1)return a.label.localeCompare(b.label);
+    if(ai===-1)return 1; if(bi===-1)return -1;
+    return ai-bi;
+  });
+  return sorted.map(org=>{
+    org.works.sort((a,b)=>(parseInt(getYear(b))||0)-(parseInt(getYear(a))||0));
+    return `<div class="group-section">
+      <div class="group-header">
+        <div class="group-label" style="color:${org.label==='SDL'?'var(--cyan)':org.label==='USU'?'#4ade80':'var(--text-dim)'}">${org.label==='SDL'?'Space Dynamics Laboratory':org.label==='USU'?'Utah State University':org.label}</div>
+        <div class="group-count">${org.works.length} work${org.works.length!==1?'s':''}</div>
+      </div>
+      ${org.works.map(w=>pubHTML(w,true)).join('')}
+    </div>`;
+  }).join('');
+}
+
 function switchTab(tab){
-  document.getElementById('tab-type').classList.toggle('active',tab==='type');
-  document.getElementById('tab-year').classList.toggle('active',tab==='year');
-  document.getElementById('view-type').style.display=tab==='type'?'block':'none';
-  document.getElementById('view-year').style.display=tab==='year'?'block':'none';
+  ['type','year','org'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',tab===t);
+    document.getElementById('view-'+t).style.display=tab===t?'block':'none';
+  });
 }
 
 function setState(state){
-  ['loading-state','error-state','empty-state','view-type','view-year'].forEach(id=>{
+  ['loading-state','error-state','empty-state','view-type','view-year','view-org'].forEach(id=>{
     document.getElementById(id).style.display='none';
   });
   if(state==='loading-state')document.getElementById('loading-state').style.display='flex';
@@ -319,10 +380,12 @@ async function load(){
 
     document.getElementById('view-type').innerHTML=buildTypeView(groups);
     document.getElementById('view-year').innerHTML=buildYearView(groups);
+    document.getElementById('view-org').innerHTML=buildOrgView(groups);
     setState('content');
 
     document.getElementById('count-type').textContent=groups.length;
     document.getElementById('count-year').textContent=groups.length;
+    document.getElementById('count-org').textContent=groups.length;
 
     const journals=groups.filter(w=>getType(w)==='journal-article').length;
     const confs=groups.filter(w=>['conference-paper','conference-abstract','conference-poster'].includes(getType(w))).length;
