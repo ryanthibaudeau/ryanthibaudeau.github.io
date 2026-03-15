@@ -1,0 +1,89 @@
+name: Refresh Scholar Citation Cache
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+  workflow_dispatch:       # Allow manual trigger from Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Scholar data from SerpAPI and update Gist
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: dc3b698a62e01a73e40c72f272ca821c
+          SCHOLAR_ID: v8wAa0oAAAAJ
+        run: |
+          echo "Fetching Google Scholar profile from SerpAPI..."
+
+          RESPONSE=$(curl -s "https://serpapi.com/search.json?engine=google_scholar_author&author_id=${SCHOLAR_ID}&api_key=${SERPAPI_KEY}&num=100")
+
+          echo "Checking response..."
+          echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print('Total citations:', d.get('cited_by',{}).get('table',[{}])[0].get('citations',{}).get('all','unknown'))"
+
+          # Build cache JSON with timestamp, total stats, and per-paper citations
+          CACHE=$(echo "$RESPONSE" | python3 -c "
+          import sys, json
+          from datetime import datetime, timezone
+
+          data = json.load(sys.stdin)
+
+          cited_by = data.get('cited_by', {})
+          table = cited_by.get('table', [])
+
+          total_citations = 0
+          h_index = 0
+          i10_index = 0
+
+          for row in table:
+              if 'citations' in row:
+                  total_citations = row['citations'].get('all', 0)
+              if 'h_index' in row:
+                  h_index = row['h_index'].get('all', 0)
+              if 'i10_index' in row:
+                  i10_index = row['i10_index'].get('all', 0)
+
+          articles = data.get('articles', [])
+          papers = {}
+          for article in articles:
+              title = article.get('title', '')
+              cited = article.get('cited_by', {}).get('value', 0)
+              link = article.get('link', '')
+              papers[title.lower()[:60]] = {
+                  'title': title,
+                  'citations': cited,
+                  'scholar_link': link
+              }
+
+          cache = {
+              'updated': datetime.now(timezone.utc).isoformat(),
+              'total_citations': total_citations,
+              'h_index': h_index,
+              'i10_index': i10_index,
+              'papers': papers
+          }
+
+          print(json.dumps(cache, indent=2))
+          ")
+
+          echo "Cache built. Updating Gist..."
+
+          # Escape JSON for GitHub API
+          PAYLOAD=$(python3 -c "
+          import json, sys
+          content = sys.stdin.read()
+          payload = {'files': {'scholar_cache.json': {'content': content}}}
+          print(json.dumps(payload))
+          " <<< "$CACHE")
+
+          # Update the Gist
+          RESULT=$(curl -s -X PATCH \
+            -H "Authorization: token ${GIST_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "https://api.github.com/gists/${GIST_ID}")
+
+          echo "Done. Gist updated."
+          echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print('Updated at:', d.get('updated_at','unknown'))"
