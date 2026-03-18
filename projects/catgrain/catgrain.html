@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>1N CatGrain Satellite Thruster — Ryan Thibaudeau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#080c10;--bg2:rgba(13,21,32,0.88);--surface:rgba(17,25,35,0.85);
+      --border:#1e2d3d;--accent:#e85d26;--accent2:#f5a623;--cyan:#3dd6f5;
+      --text:#c8d8e8;--text-dim:#5a7a9a;--text-bright:#eaf2ff;
+      --mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;--body:'Barlow',sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;background:#080c10;}
+    body{background:transparent;color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:60px;background:rgba(8,12,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--mono);font-size:0.8rem;color:var(--cyan);letter-spacing:0.1em;text-decoration:none;}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;position:relative;}
+    .nav-links a:hover{color:var(--text-bright);}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transition:transform 0.2s;}
+    .nav-links a:hover::after{transform:scaleX(1);}
+
+    /* BACK BUTTON */
+    .back-bar{position:relative;z-index:1;padding:1.25rem 10vw;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .back-link{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;}
+    .back-link:hover{color:var(--cyan);}
+    .back-link::before{content:'← ';}
+
+    /* PAGE HERO */
+    .page-hero{position:relative;z-index:1;padding:5rem 10vw 4rem;border-bottom:1px solid var(--border);background:var(--bg2);}
+    .project-id{font-family:var(--mono);font-size:0.62rem;color:var(--accent);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem;}
+    .page-hero h1{font-family:var(--head);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:700;color:var(--text-bright);margin-bottom:1rem;line-height:1.1;}
+    .hero-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+    .htag{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.6rem;border:1px solid;}
+    .htag-org{color:#4ade80;border-color:rgba(74,222,128,0.3);}
+    .htag-sys{color:var(--cyan);border-color:rgba(61,214,245,0.25);}
+    .htag-disc{color:#a78bfa;border-color:rgba(167,139,250,0.25);}
+    .htag-status{color:var(--text-dim);border-color:var(--border);}
+
+    /* STAT ROW */
+    .stat-row{display:flex;gap:3rem;flex-wrap:wrap;padding-top:1.5rem;border-top:1px solid var(--border);}
+    .stat-item{display:flex;flex-direction:column;gap:0.2rem;}
+    .stat-value{font-family:var(--head);font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1;}
+    .stat-label{font-family:var(--mono);font-size:0.58rem;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;}
+
+    /* MAIN LAYOUT */
+    .content-wrap{position:relative;z-index:1;display:grid;grid-template-columns:2fr 1fr;gap:0;align-items:start;}
+    .main-content{padding:4rem 4rem 6rem 10vw;border-right:1px solid var(--border);}
+    .sidebar{padding:4rem 10vw 4rem 3rem;position:sticky;top:80px;}
+
+    /* SECTION */
+    .section{margin-bottom:3.5rem;}
+    .section-label{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;}
+    .section h2{font-family:var(--head);font-size:1.6rem;font-weight:700;color:var(--text-bright);margin-bottom:1.25rem;position:relative;display:inline-block;}
+    .section h2::after{content:'';position:absolute;bottom:-6px;left:0;width:50%;height:2px;background:linear-gradient(90deg,var(--accent),transparent);}
+    .section h3{font-family:var(--head);font-size:1.15rem;font-weight:600;color:var(--text-bright);margin:1.5rem 0 0.75rem;}
+    .section p{font-size:0.95rem;line-height:1.85;color:var(--text);margin-bottom:1rem;}
+    .section p strong{color:var(--text-bright);font-weight:600;}
+
+    /* CALLOUT BOX */
+    .callout{background:rgba(0,0,0,0.3);border-left:3px solid var(--accent);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .callout-label{font-family:var(--mono);font-size:0.55rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.4rem;}
+    .callout p{font-size:0.88rem;line-height:1.7;color:var(--text);margin:0;}
+
+    /* RESULT CALLOUT */
+    .result-callout{background:rgba(0,0,0,0.3);border-left:3px solid var(--cyan);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .result-callout .callout-label{color:var(--cyan);}
+
+    /* IMAGE PLACEHOLDER */
+    .img-placeholder{background:var(--surface);border:1px dashed var(--border);padding:3rem 2rem;text-align:center;margin:1.5rem 0;position:relative;}
+    .img-placeholder .img-label{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;}
+    .img-placeholder .img-caption{font-size:0.82rem;color:var(--text-dim);font-style:italic;}
+    .img-placeholder .img-icon{font-size:2rem;opacity:0.2;margin-bottom:0.75rem;}
+
+    /* IMAGE GRID */
+    .img-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+    .img-grid .img-placeholder{margin:0;}
+
+    /* STEPS LIST */
+    .steps-list{list-style:none;margin:1rem 0;}
+    .steps-list li{padding:0.6rem 0 0.6rem 1.5rem;position:relative;font-size:0.9rem;line-height:1.6;color:var(--text);border-bottom:1px solid var(--border);}
+    .steps-list li:last-child{border-bottom:none;}
+    .steps-list li::before{content:counter(step-counter);counter-increment:step-counter;position:absolute;left:0;font-family:var(--mono);font-size:0.6rem;color:var(--accent);top:0.75rem;}
+    .steps-list{counter-reset:step-counter;}
+
+    /* COMPARISON TABLE */
+    .comparison-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;}
+    .comparison-table th{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;text-align:left;padding:0.6rem 1rem;border-bottom:1px solid var(--border);}
+    .comparison-table td{padding:0.6rem 1rem;border-bottom:1px solid rgba(30,45,61,0.5);color:var(--text);}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table .highlight td{color:var(--text-bright);background:rgba(61,214,245,0.05);}
+    .comparison-table .val-good{color:#4ade80;}
+    .comparison-table .val-bad{color:var(--accent);}
+
+    /* SIDEBAR CARDS */
+    .sidebar-card{background:var(--surface);border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem;}
+    .sidebar-card-label{font-family:var(--mono);font-size:0.58rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .sidebar-card p{font-size:0.82rem;line-height:1.65;color:var(--text-dim);}
+    .sidebar-card p strong{color:var(--text);}
+    .sidebar-link{display:block;font-family:var(--mono);font-size:0.65rem;color:var(--cyan);text-decoration:none;letter-spacing:0.08em;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
+    .sidebar-link:last-child{border-bottom:none;}
+    .sidebar-link:hover{color:var(--accent2);}
+    .sidebar-link::before{content:'→ ';color:var(--accent);}
+
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem 10vw;display:flex;justify-content:space-between;align-items:center;background:var(--bg2);}
+    footer .copy{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+    footer .footer-links{display:flex;gap:1.5rem;}
+    footer a{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;transition:color 0.2s;}
+    footer a:hover{color:var(--cyan);}
+
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scan 8s linear infinite;opacity:0.15;pointer-events:none;z-index:200;}
+    @keyframes scan{0%{top:-10px;}100%{top:100vh;}}
+
+    @media(max-width:1024px){
+      .content-wrap{grid-template-columns:1fr;}
+      .main-content{border-right:none;padding:3rem 6vw;}
+      .sidebar{position:static;padding:0 6vw 3rem;}
+      nav{padding:0 1.5rem;}.nav-links{gap:1rem;}
+      footer{padding:2rem 6vw;}
+      .back-bar{padding:1.25rem 6vw;}
+    }
+  </style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav>
+  <a class="nav-logo" href="../../home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="../../home.html">Home</a></li>
+    <li><a href="../../portfolio.html">Portfolio</a></li>
+    <li><a href="../../publications.html">Publications</a></li>
+    <li><a href="../../CV.html">CV</a></li>
+    <li><a href="../../contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="back-bar">
+  <a class="back-link" href="../../portfolio.html">Back to Portfolio</a>
+</div>
+
+<div class="page-hero">
+  <div class="project-id">// USU-HRE-001</div>
+  <h1>1N CatGrain Satellite Thruster</h1>
+  <div class="hero-tags">
+    <span class="htag htag-org">USU</span>
+    <span class="htag htag-sys">HRE</span>
+    <span class="htag htag-disc">Experimental</span>
+    <span class="htag htag-disc">Design & Analysis</span>
+    <span class="htag htag-disc">Additive Manufacturing</span>
+    <span class="htag htag-status">Complete — M.S. Thesis 2023</span>
+  </div>
+  <div class="stat-row">
+    <div class="stat-item">
+      <div class="stat-value">1 N</div>
+      <div class="stat-label">Thrust Class</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">~500 ms</div>
+      <div class="stat-label">Ignition Latency</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">96.5%</div>
+      <div class="stat-label">Combustion Efficiency</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">270 s</div>
+      <div class="stat-label">Vacuum Isp</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">TRL-4</div>
+      <div class="stat-label">Readiness Level</div>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <div class="main-content">
+
+    <!-- BACKGROUND -->
+    <div class="section">
+      <div class="section-label">// 01 — background</div>
+      <h2>Background & Motivation</h2>
+      <p>
+        The growing SmallSat industry has created strong demand for compact, high-performance, and safe propulsion systems. Hydrazine — the current standard — is highly toxic, expensive to handle, and increasingly restricted by regulation. Both NASA and the USAF are actively pursuing green alternatives.
+      </p>
+      <p>
+        The USU Propulsion Research Laboratory and Space Dynamics Laboratory have collaborated for over a decade on <strong>High-Performance Green Hybrid Propulsion (HPGHP)</strong> technology using 3D-printed ABS fuel and an arc-ignition system. In its mature form with gaseous oxygen (GOX), this system achieves vacuum Isp exceeding 300 seconds — competitive with hydrazine.
+      </p>
+      <p>
+        The challenge: GOX requires high-pressure storage and is volumetrically inefficient for small satellites where volume is the tightest constraint. <strong>High-test hydrogen peroxide (HTP)</strong> is a far denser oxidizer — it would need to be stored at pressures exceeding 10,000 psi to match HTP's specific gravity. HTP/ABS hybrids show theoretical Isp of 324 seconds and density impulse of 4,450 N·s/liter. The problem is ignition.
+      </p>
+
+      <div class="callout">
+        <div class="callout-label">// The Core Problem</div>
+        <p>HTP is a liquid under standard conditions and requires significant activation energy to decompose. When injected into a cold motor, it pools and can cause dangerous pressure spikes. Traditional solutions — GOX pre-lead or external catalyst beds — require extra hardware, power, and complexity that are prohibitive at the SmallSat scale.</p>
+      </div>
+    </div>
+
+    <!-- TECHNICAL APPROACH -->
+    <div class="section">
+      <div class="section-label">// 02 — technical approach</div>
+      <h2>The CatGrain Concept</h2>
+      <p>
+        This work developed the <strong>heterogeneous CatGrain</strong>: a 3D-printed ABS fuel grain post-infused with potassium permanganate (KMnO₄) catalyst using the principle of interstitial diffusion. The natural porosity and layer boundaries of FDM-printed ABS allow a pressurized aqueous KMnO₄ solution to diffuse uniformly through the grain structure. Notably, even when printed at 100% infill density, the catalyst loading achieved through this process is only approximately 1% by weight — a consequence of the inherently small interstitial gaps between printed layers that limit total catalyst uptake.
+      </p>
+      <p>
+        <div class="img-placeholder" style="margin:1.5rem 0;">
+          <img src="img/Infusion Diagram.png" alt="CatGrain catalyst infusion diagram" style="width:100%;height:auto;display:block;">
+          <div class="img-caption" style="padding:0.75rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;">Schematic illustrating the heterogeneous catalyst infusion process into 3D-printed ABS fuel grain</div>
+        </div>
+
+        When HTP contacts the exposed catalyst at the grain surface, it decomposes near-instantaneously — releasing gaseous oxygen inside the combustion chamber. This GOX release, combined with the existing arc-ignition system, produces reliable, fast ignition without any additional hardware.
+      </p>
+
+      <h3>Manufacturing Process</h3>
+      <ol class="steps-list">
+        <li>3D print ABS fuel grain using FDM and measure initial mass</li>
+        <li>Prepare aqueous KMnO₄ solution at maximum solubility for given temperature</li>
+        <li>Load fuel grain into a pressure chamber and fill with solution</li>
+        <li>Pressurize to 100 psig and place on rotating stand</li>
+        <li>Soak for 24 hours to allow catalyst diffusion into grain pores and layer boundaries</li>
+        <li>Release pressure, drain solution, remove CatGrain</li>
+        <li>Oven-dry at 80°C for 8 hours to remove water content</li>
+        <li>Measure final mass to calculate catalyst uptake</li>
+      </ol>
+
+      <div class="img-placeholder" style="padding:0;">
+        <img src="img/Infused Fuel CatGrain.jpg" alt="Infused CatGrain fuel grain" style="width:100%;height:auto;display:block;">
+        <div class="img-caption" style="padding:0.75rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;">Completed KMnO₄ CatGrain after infusion and drying process</div>
+      </div>
+
+      <h3>Why Heterogeneous, Not Homogeneous</h3>
+      <p>
+        An earlier approach attempted to dissolve catalyst directly into ABS filament before printing — the homogeneous method. This failed because the catalyst becomes encased in plastic and cannot react with HTP until the plastic is already burning. The heterogeneous post-infusion approach places catalyst at the grain surface where it is immediately accessible to the incoming oxidizer.
+      </p>
+
+      <h3>Vacuum Compatibility</h3>
+      <p>
+        Since this system targets in-space applications, the CatGrain must retain catalyst in the vacuum of space. Vacuum bake-out testing confirmed that after an initial loss, catalyst content stabilizes at approximately <strong>0.5% by weight</strong> — and drip tests on vacuum-baked grains still demonstrate strong catalytic activity. The system is space-compatible.
+      </p>
+
+      <div class="img-placeholder">
+        <div class="img-icon">⬜</div>
+        <div class="img-label">// Figure 4.8 — Vacuum Compatibility Test Setup</div>
+        <div class="img-caption">Upload image: Vacuum chamber and pump used for bake-out validation</div>
+      </div>
+    </div>
+
+    <!-- TEST CAMPAIGN -->
+    <div class="section">
+      <div class="section-label">// 03 — test campaign</div>
+      <h2>Test Campaign</h2>
+      <p>
+        Testing was conducted at Space Dynamics Laboratory using an inverted pendulum thrust sled with a load cell for direct thrust measurement. Thrust, chamber pressure, and temperature data were acquired via LabVIEW. A custom MATLAB code processed mass flow rates, Isp, thrust coefficient, characteristic velocity, and combustion efficiency.
+      </p>
+      <p>
+        Three configurations were compared: <strong>HTP/ABS neat</strong> (baseline — no ignition aid), <strong>HTP/ABS with external catalyst bed</strong>, and the <strong>CatGrain</strong>. All three used the same arc-ignition system.
+      </p>
+
+
+
+      <div class="img-placeholder" style="padding:0;">
+        <img src="img/Hot_Fire_Initial_Validation.png" alt="Initial CatGrain hot-fire validation test" style="width:100%;height:auto;display:block;">
+        <div class="img-caption" style="padding:0.75rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;">Initial hot-fire validation test demonstrating successful ignition and sustained combustion</div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="section">
+      <div class="section-label">// 04 — results</div>
+      <h2>Results & Performance</h2>
+
+      <h3>Comparison to Baseline Systems</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Configuration</th>
+            <th>Rise Time</th>
+            <th>Combustion Efficiency</th>
+            <th>Extra Hardware</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plain ABS (no ignition aid)</td>
+            <td class="val-bad">~5 seconds</td>
+            <td class="val-bad">Not measurable</td>
+            <td>None</td>
+          </tr>
+          <tr>
+            <td>External Catalyst Bed</td>
+            <td class="val-bad">~5 seconds</td>
+            <td class="val-bad">~62%</td>
+            <td>Catbed, pre-heat system</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>CatGrain (optimized)</strong></td>
+            <td class="val-good">~0.5–0.9 seconds</td>
+            <td class="val-good">96.5%</td>
+            <td><strong>None</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="img-placeholder" style="padding:0;">
+        <img src="img/CatGrain_PlainABS_comparison.png" alt="Direct comparison of CatGrain, Plain ABS, and Plain ABS with CatBed" style="width:100%;height:auto;display:block;">
+        <div class="img-caption" style="padding:0.75rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;">Direct comparison of CatGrain vs. plain ABS vs. plain ABS with external catalyst bed — thrust and chamber pressure vs. time</div>
+      </div>
+
+      <h3>Optimized CatGrain Performance</h3>
+      <p>
+        After iterating on grain length (shortened from 1.6" to 1.1" to optimize O/F ratio while maintaining combustion length) and refining the motor casing, the optimized CatGrain demonstrated:
+      </p>
+
+      <div class="result-callout">
+        <div class="callout-label">// Key Performance Results</div>
+        <p>Rise time of <strong>0.9 seconds</strong> · Vacuum Isp up to <strong>270 seconds</strong> · O/F ratio of <strong>3.66</strong> (equivalence ratio 1.94) · Combustion efficiency of <strong>96.5%</strong> · Successful reignition demonstrated</p>
+      </div>
+
+      <div class="img-placeholder">
+        <div class="img-icon">⬜</div>
+        <div class="img-label">// Figure 4.14 — Optimized CatGrain Reignition Test</div>
+        <div class="img-caption">Upload image: Performance plots from reignition test — thrust, Isp, chamber pressure, O/F ratio vs time</div>
+      </div>
+
+      <div class="result-callout">
+        <div class="callout-label">// Key Performance Results</div>
+        <p>Rise time reduced by an order of magnitude vs. baseline · Combustion efficiency of <strong>96.5%</strong> · Vacuum Isp up to <strong>270 seconds</strong> at O/F ratio of <strong>3.66</strong> (equivalence ratio 1.94) · Successful reignition demonstrated. This O/F ratio is more fuel-rich than the peak characteristic velocity (c*) value — CEA analysis indicates that hitting the optimal O/F ratio would push vacuum Isp beyond <strong>320 seconds</strong>, exceeding hydrazine performance.</p>
+      </div>
+
+      <h3>Additional Observations</h3>
+      <p>
+        The CatGrain also demonstrated <strong>improved safety</strong>: in misfire events, injected HTP decomposes near-instantaneously on contact with exposed KMnO₄ rather than pooling in the chamber — eliminating the risk of sudden overpressure events that can rupture the motor casing.
+      </p>
+      <p>
+        <strong>No nozzle erosion</strong> was observed across all HTP tests. Operating on the fuel-rich side of stoichiometric (equivalence ratio ~2.0) prevents a sufficiently oxidizing environment from forming at the graphite nozzle.
+      </p>
+      <p>
+        An atypical <strong>burn regression pattern</strong> was observed due to direct HTP impingement from the full-cone spray injector. The tight motor geometry forces erosive burning toward the injector end early in the burn, transitioning to conventional radial regression over time — rendering traditional Marxman regression rate models inaccurate for this configuration.
+      </p>
+
+      <div class="img-placeholder">
+        <div class="img-icon">⬜</div>
+        <div class="img-label">// Figure 4.15 — Burn Regression Pattern</div>
+        <div class="img-caption">Upload image: Fuel grain cross-sections at t=0, 5s, 10s, 15s, 20s showing progression of erosive to convective burning</div>
+      </div>
+    </div>
+
+    <!-- CONCLUSIONS & FUTURE WORK -->
+    <div class="section">
+      <div class="section-label">// 05 — conclusions</div>
+      <h2>Conclusions & Future Work</h2>
+      <p>
+        The heterogeneous CatGrain is a validated, patent-pending approach to solving the ignition latency problem in HTP-based hybrid propulsion — without the hardware overhead of GOX pre-lead or external catalyst beds. It functions as a true drop-in replacement for GOX in a GOX/ABS hybrid motor and is more flight-ready than any prior approach at this scale.
+      </p>
+      <p>
+        At <strong>TRL-4</strong>, the system is ready for adaptation toward a flight design. Future work includes optimization of catalyst-doped mesh materials for staged decomposition, injector redesign to mitigate erosive burning of the ignition cap, and scaling investigations for higher thrust levels relevant to the CubeSat and SmallSat market.
+      </p>
+      <p>
+        Further optimization of the O/F ratio is also needed to shift combustion toward peak c* and maximize Isp — the current configuration operates more fuel-rich than optimal, leaving meaningful performance on the table. Injector geometry modifications and oxidizer flow tuning are the primary levers for achieving this.
+      </p>
+      <p>
+        The catalyst infusion manufacturing technique has since been extended to solid fuel ramjet propellants — forming the basis of the <strong>Functionally Graded Fuel via AM</strong> project and the underlying patent-pending fabrication process.
+      </p>
+    </div>
+
+  </div><!-- end main-content -->
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Project Info</div>
+      <p><strong>Organization:</strong> Utah State University</p>
+      <p><strong>Lab:</strong> Propulsion Research Laboratory</p>
+      <p><strong>Funding:</strong> NASA Small Spacecraft Technology Program (Grant No. 80NSSC20M0083)</p>
+      <p><strong>Testing Facility:</strong> Space Dynamics Laboratory</p>
+      <p><strong>Status:</strong> Complete — M.S. Thesis, December 2023</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Propellants</div>
+      <p><strong>Oxidizer:</strong> 90% High-Test Hydrogen Peroxide (HTP)</p>
+      <p><strong>Fuel:</strong> 3D-Printed ABS with KMnO₄ catalyst infusion</p>
+      <p><strong>Ignition:</strong> Arc-ignition system (patented, USU)</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Patent</div>
+      <p>The catalyst infusion manufacturing technique is the subject of a pending US patent:</p>
+      <p style="margin-top:0.5rem;"><strong>US 2025/0282694 A1</strong><br>Infused Solid Fuel for Hybrid Rockets and Ordnance</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Related Publications</div>
+      <a class="sidebar-link" href="publications.html#:~:text=Development+of+a+KMNO4">Development of a KMNO4 Catalyst-Infused Fuel Grain — SmallSat 2023</a>
+      <a class="sidebar-link" href="publications.html#:~:text=Potassium+Permanganate">Development of a Potassium Permanganate Catalyst-Infused Fuel Grain — AIAA SCITECH 2024</a>
+      <a class="sidebar-link" href="publications.html#:~:text=Cold-Infusion">Cold-Infusion of Catalytic Materials — SmallSat 2024</a>
+      <a class="sidebar-link" href="https://digitalcommons.usu.edu/etd2023/47/" target="_blank" rel="noopener">M.S. Thesis — DigitalCommons@USU</a>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Related Projects</div>
+      <a class="sidebar-link" href="../../portfolio.html">Functionally Graded Fuel via AM</a>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../../portfolio.html">Portfolio</a>
+    <a href="../../publications.html">Publications</a>
+    <a href="../../CV.html">CV</a>
+    <a href="../../contact.html">Contact</a>
+  </div>
+</footer>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="../../assets/background.js"></script>
+</body>
+</html>
