@@ -169,7 +169,7 @@
     </div>
     <div class="stat-item">
       <div class="stat-value">270 s</div>
-      <div class="stat-label">Vacuum Isp</div>
+      <div class="stat-label">Vacuum Isp (ER = 1.94)</div>
     </div>
     <div class="stat-item">
       <div class="stat-value">TRL-4</div>
@@ -244,11 +244,7 @@
         Since this system targets in-space applications, the CatGrain must retain catalyst in the vacuum of space. Vacuum bake-out testing confirmed that after an initial loss, catalyst content stabilizes at approximately <strong>0.5% by weight</strong> — and drip tests on vacuum-baked grains still demonstrate strong catalytic activity. The system is space-compatible.
       </p>
 
-      <div class="img-placeholder">
-        <div class="img-icon">⬜</div>
-        <div class="img-label">// Figure 4.8 — Vacuum Compatibility Test Setup</div>
-        <div class="img-caption">Upload image: Vacuum chamber and pump used for bake-out validation</div>
-      </div>
+
     </div>
 
     <!-- TEST CAMPAIGN -->
@@ -287,15 +283,21 @@
         </thead>
         <tbody>
           <tr>
-            <td>Plain ABS (no ignition aid)</td>
+            <td>ABS Neat (no ignition aid)</td>
             <td class="val-bad">~5 seconds</td>
-            <td class="val-bad">Not measurable</td>
+            <td class="val-bad">~62%</td>
             <td>None</td>
           </tr>
           <tr>
+            <td>GOX Pre-Lead</td>
+            <td class="val-bad">~0.25 seconds</td>
+            <td class="val-bad">~80%</td>
+            <td>High-pressure GOX tank, regulator, valve, plumbing, pressure sensor</td>
+          </tr>
+          <tr>
             <td>External Catalyst Bed</td>
-            <td class="val-bad">~5 seconds</td>
-            <td class="val-bad">~62%</td>
+            <td class="val-bad">~3 seconds</td>
+            <td class="val-bad">~70%</td>
             <td>Catbed, pre-heat system</td>
           </tr>
           <tr class="highlight">
@@ -309,23 +311,7 @@
 
       <div class="img-placeholder" style="padding:0;">
         <img src="img/CatGrain_PlainABS_comparison.png" alt="Direct comparison of CatGrain, Plain ABS, and Plain ABS with CatBed" style="width:100%;height:auto;display:block;">
-        <div class="img-caption" style="padding:0.75rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;">Direct comparison of CatGrain vs. plain ABS vs. plain ABS with external catalyst bed — thrust and chamber pressure vs. time</div>
-      </div>
-
-      <h3>Optimized CatGrain Performance</h3>
-      <p>
-        After iterating on grain length (shortened from 1.6" to 1.1" to optimize O/F ratio while maintaining combustion length) and refining the motor casing, the optimized CatGrain demonstrated:
-      </p>
-
-      <div class="result-callout">
-        <div class="callout-label">// Key Performance Results</div>
-        <p>Rise time of <strong>0.9 seconds</strong> · Vacuum Isp up to <strong>270 seconds</strong> · O/F ratio of <strong>3.66</strong> (equivalence ratio 1.94) · Combustion efficiency of <strong>96.5%</strong> · Successful reignition demonstrated</p>
-      </div>
-
-      <div class="img-placeholder">
-        <div class="img-icon">⬜</div>
-        <div class="img-label">// Figure 4.14 — Optimized CatGrain Reignition Test</div>
-        <div class="img-caption">Upload image: Performance plots from reignition test — thrust, Isp, chamber pressure, O/F ratio vs time</div>
+        <div class="img-caption" style="padding:0.75rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;">Direct comparison of CatGrain vs. ABS neat vs. ABS neat with external catalyst bed — thrust and chamber pressure vs. time</div>
       </div>
 
       <div class="result-callout">
@@ -339,9 +325,6 @@
       </p>
       <p>
         <strong>No nozzle erosion</strong> was observed across all HTP tests. Operating on the fuel-rich side of stoichiometric (equivalence ratio ~2.0) prevents a sufficiently oxidizing environment from forming at the graphite nozzle.
-      </p>
-      <p>
-        An atypical <strong>burn regression pattern</strong> was observed due to direct HTP impingement from the full-cone spray injector. The tight motor geometry forces erosive burning toward the injector end early in the burn, transitioning to conventional radial regression over time — rendering traditional Marxman regression rate models inaccurate for this configuration.
       </p>
 
       <div class="img-placeholder">
