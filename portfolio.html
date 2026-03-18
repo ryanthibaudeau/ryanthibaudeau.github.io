@@ -108,6 +108,8 @@
     .card-pub-link::before{content:'→ ';color:var(--accent);}
     .card-read-more{display:inline-block;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:0.5rem 1rem;text-decoration:none;transition:background 0.2s;margin-top:0.5rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
     .card-read-more:hover{background:var(--accent2);}
+    .card-contribution{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.08em;padding:0.5rem 0;border-top:1px solid var(--border);}
+    .card-contribution strong{color:var(--text);}
     .card-pubs{margin-top:0.25rem;}
     .card-pubs-label{font-family:var(--mono);font-size:0.55rem;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.4rem;}
     .card-pubs-list{display:flex;flex-direction:column;gap:0.3rem;}
@@ -116,6 +118,8 @@
     .card-pub-link::before{content:'→ ';color:var(--accent);}
     .card-read-more{display:inline-block;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:0.5rem 1rem;text-decoration:none;transition:background 0.2s;margin-top:0.5rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
     .card-read-more:hover{background:var(--accent2);}
+    .card-contribution{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.08em;padding:0.5rem 0;border-top:1px solid var(--border);}
+    .card-contribution strong{color:var(--text);}
     @media(max-width:900px){
       nav{padding:0 1.5rem;}.nav-links{gap:1rem;}
       .page-hero,main{padding-left:6vw;padding-right:6vw;}
@@ -201,6 +205,7 @@ const PROJECTS = [
     status: 'complete',
     desc: 'Developed a catalyst-infused ABS fuel grain (CatGrain) to overcome ignition latency issues inherent in high-test hydrogen peroxide (HTP)-based hybrid systems. The catalyst is cold-infused directly into 3D-printed fuel post-print using the concept of interstitial diffusion. This eliminates the need for extra hardware to achieve ignition, allowing the engine to maximize propellant volume and reduce dead weight.',
     result: 'Demonstrated reduction in ignition latencies by an order of magnitude (as quick as 500 ms) and increase in combustion efficiency from 70% to 95% compared to pure ABS in a 1N prototype thruster. Basis for pending patent US 2025/0282694 A1.',
+    contribution: 'Solo project — concept development, fabrication, testing, data analysis, thesis writing.',
     tags: ['HTP', 'ABS', 'CatGrain', 'Additive Manufacturing', 'Ignition', 'SmallSat'],
     accent: '#3dd6f5',
     readMore: 'projects/catgrain/catgrain.html',
@@ -219,6 +224,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Developing a low-cost hybrid thruster system for post-mission satellite de-orbiting, with sufficient agility for mission-critical maneuvers including object avoidance and orbit raising. Addresses new USA and EU legislation requiring explicit de-orbit plans for satellites.',
     result: 'Demonstrated performance of a 100N-class Nytrox/ABS thruster with arc-ignition system. Associated with published work on performance enhancement and arc-ignition development.',
+    contribution: 'Lead researcher — motor design, test campaign, performance modeling, co-author on publications.',
     tags: ['Nytrox', 'ABS', 'De-Orbit', 'SmallSat', 'Arc Ignition'],
     accent: '#3dd6f5',
     pubs: [
@@ -235,6 +241,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Developing a throttleable hybrid motor to replace expensive, hazardous clusters of solid rocket motors used in high-speed sled track testing. Paired with the PRL digital throttle technology to replicate complex multi-motor acceleration profiles with a single engine.',
     result: 'Single-engine solution achieving variable acceleration profiles previously requiring multi-SRM clusters — reducing cost, explosive risk, and operational complexity.',
+    contribution: 'Lead researcher — motor design, digital throttle integration, test campaign.',
     tags: ['GOX', 'ABS', 'Digital Throttle', 'Test Infrastructure', 'Throttleable'],
     accent: '#3dd6f5',
     pubs: []
@@ -248,6 +255,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Developed a scaled hybrid rocket motor analogue of NASA Artemis lunar landers to provide empirical data for plume-surface interaction (PSI) models. Conducted 78+ hot-fire tests across three NASA facilities — including hard vacuum testing at Marshall Space Flight Center and upcoming testing at Langley Research Center.',
     result: 'Demonstrated ability to design and tune an HRE to mimic plume characteristics of a liquid rocket engine, including species, pressures, temperatures, velocities, and vacuum expansion. The most highly-tested and well-characterized hybrid motor in vacuum conditions in history.',
+    contribution: 'Lead test engineer — motor design, 78+ hot-fire tests across three NASA facilities, performance analysis, co-author.',
     tags: ['GOX', 'ABS', 'NASA', 'Artemis', 'PSI', 'Vacuum Testing', 'Moon'],
     accent: '#3dd6f5',
     pubs: [
@@ -263,6 +271,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Demonstrated that a hybrid rocket engine can produce high-velocity, high-temperature gaseous flow fields replicating hypersonic flight conditions from Mach 5 to Mach 20 — at a fraction of the cost of conventional hypersonic wind tunnels or arc jet systems. Fills a gap in medium-fidelity ground testing for low-TRL hypersonic projects.',
     result: 'Feasibility demonstrated on supersonic airfoils and thermal protection materials. Ongoing work expanding demonstrated flight envelopes and extreme heating conditions.',
+    contribution: 'Lead researcher — test methodology development, flight condition translation framework, experimental validation.',
     tags: ['Hypersonic', 'Gas Generator', 'Aerothermal', 'TPS Testing', 'Mach 5–20'],
     accent: '#f5a623',
     pubs: [
@@ -279,6 +288,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Developing computational and analytical models for hybrid rocket and solid fuel ramjet combustion behavior, characterizing the thermofluid and thermochemical dynamics that govern performance across varying operating conditions and flight environments.',
     result: 'Ongoing — models informing fuel grain design, flight envelope predictions, and experimental test planning across HRE and SFRJ programs.',
+    contribution: 'Lead — combustion model development and validation across HRE and SFRJ programs.',
     tags: ['CFD', 'Analytical Modeling', 'Combustion', 'Thermochemistry', 'HRE', 'SFRJ'],
     accent: '#e85d26',
     pubs: []
@@ -292,6 +302,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Investigating the flammability boundaries of solid fuel ramjet systems to define operational limits and inform safe, high-performance fuel grain designs. Work characterizes the conditions under which sustained combustion is achievable across the intended flight envelope.',
     result: 'Ongoing — establishing flammability maps to define SFRJ design constraints and operational boundaries.',
+    contribution: 'Lead — flammability limit modeling and flight envelope characterization for SFRJ systems.',
     tags: ['SFRJ', 'Flammability', 'Combustion Limits', 'Flight Envelope', 'Analytical Modeling'],
     accent: '#e85d26',
     pubs: []
@@ -305,6 +316,7 @@ const PROJECTS = [
     status: 'active',
     desc: 'Applied patent-pending fuel blending and additive manufacturing techniques to fabricate functionally graded solid fuel grains for SFRJ propulsion — enabling spatial control of fuel composition and regression rate within a single printed grain.',
     result: 'Demonstrated feasibility of AM-produced functionally graded fuels. Published at AIAA SCITECH 2026. Foundation of pending patent US 2025/0282694 A1.',
+    contribution: 'Lead — AM process development, fuel fabrication, feasibility testing, patent filing, publication author.',
     tags: ['SFRJ', 'Additive Manufacturing', 'Functionally Graded', 'Patent Pending', 'AIAA 2026'],
     accent: '#e85d26',
     pubs: [
@@ -412,6 +424,7 @@ function cardHTML(p) {
       <div class="result-text">${p.result}</div>
     </div>
     <div class="card-tags">${plainTags}</div>
+    ${p.contribution ? `<div class="card-contribution"><strong>Role:</strong> ${p.contribution}</div>` : ''}
     ${p.pubs && p.pubs.length > 0 ? (() => `<div class="card-pubs"><div class="card-pubs-label">// Related Publications</div><div class="card-pubs-list">${p.pubs.map(pub => '<a class="card-pub-link" href="' + pub.url + '">' + pub.title + '</a>').join('')}</div></div>`)() : ''}
     ${p.readMore ? `<a class="card-read-more" href="${p.readMore}">Read More →</a>` : ''}
   </div>`;
