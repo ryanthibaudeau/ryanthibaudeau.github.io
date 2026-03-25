@@ -188,7 +188,7 @@
 
       <div class="callout">
         <div class="callout-label">// The Propulsion Gap</div>
-        <p>Hydrazine-based systems dominate in-space propulsion but require costly handling infrastructure, hazmat procedures, and specialized launch approvals. Ionic liquid alternatives label themselves "green" but still require catalyst beds preheated to 350–400°C — a significant power burden for small spacecraft. Cold-gas thrusters are safe but lack the impulse budget needed for reliable deorbit from LEO.</p>
+        <p>Hydrazine-based systems dominate in-space propulsion but require costly handling infrastructure, hazmat procedures, and specialized launch approvals. Ionic liquid alternatives label themselves "green" but still require catalyst beds preheated to 350–400°C — a significant power burden for small spacecraft. Cold-gas thrusters are safe but lack the impulse budget needed for reliable deorbit from LEO. Electric propulsion options are also very expensive from a cost and power draw standpoint.</p>
       </div>
 
       <p>
@@ -199,17 +199,20 @@
     <!-- TECHNICAL APPROACH -->
     <div class="section">
       <div class="section-label">// 02 — technical approach</div>
-      <h2>System Design & Development</h2>
-      <p>
-        The thruster uses a 304L stainless steel motor case designed for rapid configuration changes during iterative testing. A 3D-printed ABS fuel grain is press-fit into a fire-retardant polycarbonate liner, and a graphite heat-sink nozzle is retained by an aluminum retainer for quick replacement. Nytrox is stored in an aluminum tank with an internal siphon tube for liquid extraction and self-pressurizes at operating conditions, eliminating a dedicated pressurant system.
-      </p>
+      <h2>Technical Approach</h2>
+      <h3>Ignition</h3>
       <p>
         Ignition is achieved via USU's patented low-energy arc-ignition system — the same system developed for the GOX/ABS HPGHP platform. Arc-tracking along the 3D-printed ABS surface pyrolyzes hydrocarbon vapor, which ignites upon oxidizer flow. Startup sequences require fewer than 15 joules, and sequential firings require no additional energy input.
       </p>
 
+      <h3>Nytrox Formulation</h3>
+      <p>
+        Historically, the PRL used lower mass fractions of GOX in the Nytrox blend (10-13% GOX), which has historically had less ignition reliability with the arc-ignition system. This work investigated the pros and cons of increasing the GOX mass fraction - it reduces the density of the liquid phase slightly, but increases the Isp an equivalent amount such that the density-Isp maintains status quo. The benefit that the extra GOX in solution provides is increasing the atomization effect of the N2O liquid phase, reducing the required O/F ratio to hit peak performance, improving efficiency, and making ignition with the arc-ignition sytem 100% reliable and faster latencies.
+      </p>
+
       <h3>Injector Development</h3>
       <p>
-        Four injector configurations were evaluated through cold-flow testing with gaseous nitrogen before hot-fire commitment: a 30° doublet impinging-jet, an internal swirling 120° full-cone, a reverse-flow, and a staged internal evaporative injector. Each was designed for 36 g/s Nytrox flow at 600 psi feed pressure.
+        Four injector configurations were evaluated through cold-flow testing with carbon dioxide before hot-fire commitment: a 30° doublet impinging-jet, an internal swirling 120° full-cone, a reverse-flow, and a staged internal evaporative injector.
       </p>
 
       <div class="callout">
@@ -233,13 +236,10 @@
       <p>
         The development campaign proceeded through preliminary validation, injector cold-flow screening, grain length experimentation, and a five-burn burnout sequence simulating the full end-of-life deorbit mission. All testing was conducted at the USU Propulsion Research Laboratory BLAST Lab.
       </p>
-      <p>
-        The feed system was instrumented with four high-frequency pressure transducers and four thermocouples at key locations along the flow path, sampled via a National Instruments cDAQ-9174 data acquisition system. Oxidizer mass flow was calculated from the instrumented Venturi meter and tank mass measurements.
-      </p>
 
       <div class="video-wrap">
         <video autoplay muted loop playsinline>
-          <source src="./Deorbit Sequence Tests.mp4" type="video/mp4">
+          <source src="./Deorbit Sequence Tests - compressed.mp4" type="video/mp4">
         </video>
         <div class="video-caption">// 5-burn deorbit simulation test series — single fuel grain burnout sequence</div>
       </div>
@@ -314,11 +314,11 @@
         The Nytrox/ABS hybrid thruster is a validated, high-performance green propulsion system capable of meeting the SmallSat deorbit requirement from 600 km LEO. Its non-toxic propellant combination, self-pressurizing oxidizer, low-energy restartable ignition, and 3D-printed fuel grain make it uniquely suited to the cost and complexity constraints of small spacecraft missions.
       </p>
       <p>
-        Combustion efficiency improved from below 60% to 95% through systematic injector optimization and grain length characterization — demonstrating that O/F ratio control is the primary performance lever for this propellant combination. These results position the system well for transition toward a flight-ready design.
+        Combustion efficiency improved from below 60% to 95% through systematic injector optimization, grain length characterization, and Nytrox formulation — demonstrating that O/F ratio control is the primary performance lever for this system. These results position the system well for transition toward a flight-ready design.
       </p>
       <ol class="steps-list">
+        <li>Environmental qualification — validation testing in vacuum environments</li>
         <li>Flight system design — packaging, mass budget, and interface definition for a strap-on deorbit unit</li>
-        <li>Environmental qualification — vibration, thermal-vacuum, and long-duration propellant storability testing</li>
       </ol>
     </div>
 
@@ -339,7 +339,7 @@
     <div class="sidebar-card">
       <div class="sidebar-card-label">// My Contribution</div>
       <p><strong>Role:</strong> Propulsion Systems Engineer</p>
-      <p style="margin-top:0.75rem;"><strong>Responsibilities:</strong> Motor & system design · Injector development · Hot-fire test conductor · Data acquisition & reduction · Orbital simulation · Performance analysis</p>
+      <p style="margin-top:0.75rem;"><strong>Responsibilities:</strong> Supervision · Motor & system design · Injector development · Hot-fire test conductor · Data acquisition & reduction · Orbital simulation · Performance analysis</p>
     </div>
 
     <div class="sidebar-card">
