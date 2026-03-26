@@ -70,6 +70,9 @@
     .img-placeholder .img-icon{font-size:2rem;opacity:0.2;margin-bottom:0.75rem;}
 
     .img-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+    .video-wrap{margin:1.5rem 0;border:1px solid var(--border);background:#000;overflow:hidden;}
+    .video-wrap video{width:100%;display:block;}
+    .video-caption{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;padding:0.6rem;}
 
     .comparison-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;}
     .comparison-table th{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;text-align:left;padding:0.6rem 1rem;border-bottom:1px solid var(--border);}
@@ -409,6 +412,12 @@
       <div class="callout">
         <div class="callout-label">// Exhaust Temperature</div>
         <p>Both the ambient and vacuum plume flow-streams are calculated to have exhaust temperatures exceeding 2000°C — consistent with the high-enthalpy requirement for faithful HLS lander simulation. This extreme thermal environment makes instrumentation design and facility protection non-trivial, particularly in the regolith-bed environment at NASA LaRC.</p>
+      </div>
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline>
+          <source src="img/PSI Hot-Fire MSFC.mp4" type="video/mp4">
+        </video>
+        <div class="video-caption">// Hot-fire test at NASA Marshall Space Flight Center CDA vacuum facility</div>
       </div>
     </div>
 
