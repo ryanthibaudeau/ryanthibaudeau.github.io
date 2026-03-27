@@ -73,6 +73,10 @@
 
     .img-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
 
+    .video-wrap{margin:1.5rem 0;border:1px solid var(--border);background:#000;overflow:hidden;}
+    .video-wrap video{width:100%;display:block;}
+    .video-caption{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;padding:0.6rem;}
+
     .comparison-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;}
     .comparison-table th{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;text-align:left;padding:0.6rem 1rem;border-bottom:1px solid var(--border);}
     .comparison-table td{padding:0.6rem 1rem;border-bottom:1px solid rgba(30,45,61,0.5);color:var(--text);}
@@ -222,206 +226,79 @@
       <div class="section-label">// 02 — concept & approach</div>
       <h2>Concept & Technical Approach</h2>
       <p>
-        The gas generator is built on a legacy 75-mm hybrid thrust chamber previously developed at USU's Propulsion Research Laboratory, originally rated for 200 N thrust and 25-second burn duration using GOX/ABS propellants. For hypersonic testing, the motor is reconfigured as an open-plume gas generator — the exhaust flow is directed onto a downstream test article rather than used for thrust.
-      </p>
-
-      <h3>Propellant Selection & Enthalpy Tuning</h3>
-      <p>
-        <strong>GOX/ABS combustion</strong> produces flame temperatures exceeding 2300°C, with exhaust plume specific enthalpies equivalent to Mach 25 stratospheric flight — well above the target range. To tune down to Mach 5–10 conditions, two approaches were investigated:
+        The gas generator is a hybrid rocket engine reconfigured so its exhaust flow impinges directly onto a downstream test article rather than being used for thrust. A test article can include flush surface pressure sensors, aerodynamic shapes such as airfoils or wedge bodies, or material samples intended for thermal protection system (TPS) evaluation. By positioning the article within the plume, it experiences the combined thermal and mechanical loading of a high-enthalpy flow — conditions that are otherwise only achievable in large, expensive ground test facilities.
       </p>
       <p>
-        The first approach — switching the oxidizer from GOX to compressed air — significantly reduces throat temperatures to 700–1300°C, with equivalent stratospheric enthalpies of Mach 8–10. However, early testing revealed that the motor cannot sustain combustion with compressed air alone. A GOX pre-lead can achieve initial ignition, but as airflow enters the combustion chamber the plume becomes increasingly dirty and eventually snuffs after approximately 5–6 seconds. This approach is ongoing for future development.
+        The engine can be tuned to simulate a wide range of hypersonic flight conditions by finding an equivalent Mach number based on matching one or more of the following: enthalpy, dynamic pressure, true velocity, stagnation temperature, or stagnation pressure — at a specified flight altitude. Correlations can also be made based on matching heat flux directly to the test article surface. This flexibility allows the same hardware to serve multiple test objectives simply by adjusting engine operating parameters.
       </p>
       <p>
-        The second approach, demonstrated in subsequent work, introduces <strong>gaseous nitrogen (GN₂) injection at the nozzle exit plane</strong> to dilute and cool the GOX/ABS plume. This technique reduces impinging enthalpy to levels consistent with Mach 6–9 flight while also shifting exhaust chemistry closer to real atmospheric conditions — making the plume more representative of genuine hypersonic flight.
+        Simulated conditions are achieved by selecting the appropriate propellant combination, engine chamber pressure, and oxidizer mass flow rate to generate the target matching condition. The propellant system provides the primary control over plume temperature and enthalpy, while chamber pressure drives the dynamic pressure at the impingement point. Together, these parameters give the gas generator a broad, continuously tunable flight envelope from approximately Mach 5 through Mach 20 equivalent conditions.
       </p>
-
-      <div class="callout">
-        <div class="callout-label">// Propellant Chemistry Summary</div>
-        <p>GOX/ABS (stoichiometric O/F ≈ 2.9) yields Mach 25-equivalent enthalpies at peak temperature. Operating fuel-rich at O/F 3.0–4.25 reduces plume temperature to the 2200–2750°C range. With GN₂ dilution at the nozzle exit, impingement enthalpies are tuned to Mach 6–9 equivalent — covering the majority of the DoD's target flight envelope.</p>
-      </div>
 
       <h3>Gas Generator Hardware</h3>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="section">
+      <div class="section-label">// 03 — phase 1</div>
+      <h2>Phase 1 — Initial Validation</h2>
       <p>
-        For the high-enthalpy test campaign, the legacy 75-mm motor case was shortened to 8.5 inches with the main fuel grain section reduced to 10 cm — a compact geometry that can be entirely 3D-printed on USU's Fortus 320 printer, enabling rapid grain fabrication and turnover between tests. The fuel grain design was adapted from the Nytrox/ABS optimized configuration: 6.35 cm diameter, 10 cm long, 1.25 cm initial port diameter.
+        The initial feasibility study used the USU Propulsion Research Laboratory's 75-mm hybrid rocket engine burning GOX and ABS — a propellant combination with an extensive testing legacy at the PRL, offering high ignition reliability and well-characterized combustion behavior. The motor was reconfigured as an open-plume gas generator and fired across a 10-test hot-fire campaign, with the first five tests dedicated to plume characterization and the final five conducted with a fully-instrumented test article installed.
       </p>
       <p>
-        A round-to-oval nozzle extension skirt was initially incorporated to redirect the axi-symmetric exhaust plume into a quasi-2D flow field more representative of a wing leading edge flow. However, testing revealed an embedded normal shock in the skirt extension that reduced exit-plane Mach number to approximately 0.15–0.2 and cut thrust by ~50% — the skirt configuration was subsequently removed in favor of the stock nozzle for all instrumented test article tests.
+        The test article was a 12.5° half-angle wedge with a hexagonal boron nitride (HBN) blunted leading edge — an exotic anisotropic ceramic selected for its high-temperature survivability and low ablation rate. To validate that continuum flow existed and that the gas generator could accurately reproduce a simulated flight environment, the wedge was equipped with a Flush Airdata Sensing (FADS) system: ten flush surface pressure ports distributed along the upper and lower surfaces, plus a stagnation pressure tap at the leading edge. By measuring the differential pressure distribution across the test article, the FADS system reconstructs the local angle-of-attack of the impinging flow. Angle-of-attack was varied across 0°, 5°, and 8° between tests, and the FADS-reconstructed values were compared directly against the known geometric setpoints — achieving near-unity correlation at the leading stations, confirming the existence of a continuum supersonic flow field and validating the flight condition mapping from engine parameters to impingement conditions.
       </p>
 
-      <div class="img-placeholder">
-        <div class="img-icon">⚙</div>
-        <div class="img-label">// Gas Generator Assembly</div>
-        <div class="img-caption">75-mm hybrid motor configured as high-enthalpy gas generator — shortened ABS fuel grain, round-to-oval nozzle extension (characterization tests), and test article mounting assembly.</div>
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline>
+          <source src="./img/phase1-plume-impingement.mp4" type="video/mp4">
+        </video>
+        <div class="video-caption">// Gas generator exhaust plume impinging on 12.5° wedge test article — bow shock visible at HBN leading edge</div>
       </div>
-
-      <h3>High-Enthalpy Test Article</h3>
-      <p>
-        The test article is a 12.5° half-angle wedge with a 0.5" radius blunted leading edge constructed from <strong>hexagonal boron nitride (HBN)</strong> — an anisotropic ceramic with extremely high specific heat capacity, high-temperature strength, and a unique thermal conductivity profile. With the low-conductivity α-plane oriented radially and the high-conductivity β-plane aligned longitudinally, the HBN rod acts as an insulative absorber at the surface while conducting heat axially along its length — enabling survivability under prolonged high-enthalpy impingement.
-      </p>
-      <p>
-        The test article mounts 10 flush surface pressure taps (5 upper, 5 lower) distributed along the longitudinal axis, plus a stagnation pressure port at the HBN leading edge. Dual-band fiber-optic cables inserted into the HBN rod provide non-contact radiometric temperature measurements via Wien's law curve-fitting of the sensed black-body spectrum — covering both visible/near-infrared and mid-infrared ranges.
-      </p>
 
       <div class="img-grid">
         <div class="img-placeholder" style="margin:0;">
           <div class="img-icon">△</div>
-          <div class="img-label">// Test Article Geometry</div>
-          <div class="img-caption">12.5° wedge with HBN leading edge, flush FADS pressure ports, and fiber-optic stagnation temperature sensors.</div>
+          <div class="img-label">// Test Article & Gas Generator</div>
+          <div class="img-caption">75-mm GOX/ABS gas generator aligned with 12.5° HBN-tipped wedge test article and FADS instrumentation suite.</div>
         </div>
         <div class="img-placeholder" style="margin:0;">
-          <div class="img-icon">◎</div>
-          <div class="img-label">// HBN Leading Edge</div>
-          <div class="img-caption">Post-test HBN rod showing minimal surface ablation after 80+ seconds of cumulative high-enthalpy exposure.</div>
+          <div class="img-icon">📊</div>
+          <div class="img-label">// FADS Angle-of-Attack Verification</div>
+          <div class="img-caption">FADS-reconstructed angle-of-attack vs. geometric setpoint — near-unity correlation at leading port station, confirming continuum flow and valid flight condition mapping.</div>
         </div>
       </div>
-    </div>
-
-    <!-- TEST CAMPAIGN -->
-    <div class="section">
-      <div class="section-label">// 03 — test campaign</div>
-      <h2>Test Campaign</h2>
-      <p>
-        A 10-test hot-fire campaign was conducted at the USU Propulsion Research Laboratory BLAST facility. The first five tests were gas-generator characterization burns — evaluating compressed-air combustion, nozzle skirt behavior, and plume structure. The final five tests used the fully-instrumented test article with all pressure and fiber-optic sensors active.
-      </p>
-
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>Test Group</th>
-            <th>Configuration</th>
-            <th>Objective</th>
-            <th>Tests</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Characterization</td>
-            <td>GOX/ABS, no test article</td>
-            <td>Air combustion trials, skirt evaluation, plume temperature calibration</td>
-            <td>5</td>
-          </tr>
-          <tr class="highlight">
-            <td><strong>Instrumented</strong></td>
-            <td>GOX/ABS, no skirt, full FADS instrumentation</td>
-            <td>Pressure distribution, AoA sensing, impingement temperature measurement</td>
-            <td><strong>5</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p>
-        For all instrumented tests, the nozzle exit plane was fixed 12 inches (30.48 cm) ahead of the HBN leading edge, visually aligned to the leading edge centerline. Angle-of-attack was varied across 0°, 5°, and 8° settings to characterize the FADS pressure response and validate the Method of Characteristics pressure model.
-      </p>
-
-      <div class="img-placeholder">
-        <div class="img-icon">🔥</div>
-        <div class="img-label">// Hot-Fire — Plume Impingement</div>
-        <div class="img-caption">Gas generator exhaust plume (no skirt) impinging on the 12.5° wedge test article — bow shock clearly visible at the HBN leading edge.</div>
-      </div>
-    </div>
-
-    <!-- RESULTS -->
-    <div class="section">
-      <div class="section-label">// 04 — results</div>
-      <h2>Results & Performance</h2>
-
-      <h3>Enthalpy & Temperature Results</h3>
-      <p>
-        Fiber-optic flame temperature measurements confirmed GOX/ABS combustion chamber temperatures of approximately <strong>2730°C</strong> at ~95% combustion efficiency. After accounting for nozzle expansion and unbounded plume losses, the impingement temperature at the test article leading edge ranged from <strong>1781–1960°C</strong> across the test series — consistent with the equivalent enthalpy of stratospheric flight at <strong>Mach 7.85 to 8.25</strong>.
-      </p>
-
-      <!-- Mach range bar -->
-      <div class="mach-bar-wrap">
-        <div class="mach-bar-label">// Simulated Stratospheric Flight Mach — Achieved Envelope (Phase 1)</div>
-        <div class="mach-track">
-          <!-- Scale: Mach 0–20 → 0–100%; Mach 7.85 = 39.25%, Mach 8.25 = 41.25% -->
-          <div class="mach-fill" style="left:34%;width:8%;"></div>
-        </div>
-        <div class="mach-ticks">
-          <span class="mach-tick">M0</span>
-          <span class="mach-tick">M5</span>
-          <span class="mach-tick lit">M7.85</span>
-          <span class="mach-tick lit">M8.25</span>
-          <span class="mach-tick">M10</span>
-          <span class="mach-tick">M15</span>
-          <span class="mach-tick">M20</span>
-        </div>
-        <div class="mach-range-label">Phase 1 demonstrated range: Mach 7.85–8.25 equivalent enthalpy (expanding to Mach 5–20 with N₂ cooling)</div>
-      </div>
-
-      <table class="comparison-table">
-        <thead>
-          <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Combustion Chamber Flame Temp.</td>
-            <td class="val-good">~2730°C</td>
-            <td>GOX/ABS, ~95% η<sub>c*</sub></td>
-          </tr>
-          <tr>
-            <td>Impingement Temperature Range</td>
-            <td class="val-good">1781–1960°C</td>
-            <td>O/F 3.15–4.25, 10-test campaign</td>
-          </tr>
-          <tr class="highlight">
-            <td><strong>Equivalent Stratospheric Mach</strong></td>
-            <td class="val-good"><strong>Mach 7.85–8.25</strong></td>
-            <td>Real-gas air calc., γ = 1.274 @ ~2000 K</td>
-          </tr>
-          <tr>
-            <td>Peak Dynamic Pressure</td>
-            <td class="val-good">&gt;35 psia</td>
-            <td>Exceeds arc-jet facility capability</td>
-          </tr>
-          <tr>
-            <td>Impingement Mach Number</td>
-            <td>~1.5</td>
-            <td>Measured via Rayleigh Pitot equation, γ = 1.2</td>
-          </tr>
-          <tr>
-            <td>HBN Leading Edge Survivability</td>
-            <td class="val-good">&gt;80 seconds</td>
-            <td>Cumulative high-enthalpy exposure, no ablation</td>
-          </tr>
-        </tbody>
-      </table>
 
       <div class="result-callout">
         <div class="callout-label">// Key Result</div>
-        <p>The hybrid gas generator successfully demonstrated simultaneous simulation of hypersonic-equivalent enthalpy <em>and</em> dynamic pressure — a combination not achievable in conventional arc-jet facilities. Leading-edge impingement temperatures ranging from 1781–1960°C correspond to stratospheric flight Mach numbers of approximately 7.85–8.25. Both qualitative and quantitative agreement with 2-D Method of Characteristics models was confirmed across all five fully-instrumented test burns.</p>
+        <p>Feasibility clearly demonstrated. The gas generator produced impingement temperatures of 1781–1960°C — equivalent to stratospheric flight at Mach 7.85 to 8.25 — alongside dynamic pressures exceeding 35 psia. FADS data confirmed continuum flow and validated the flight condition correlation framework. The HBN leading edge survived over 80 seconds of cumulative high-enthalpy exposure with no surface ablation.</p>
       </div>
+    </div>
 
-      <h3>Pressure & Angle-of-Attack Sensing</h3>
+    <!-- PHASE 2 -->
+    <div class="section">
+      <div class="section-label">// 04 — phase 2</div>
+      <h2>Phase 2 — Continuing Research</h2>
       <p>
-        FADS pressure data from all five instrumented tests were compared against 2-D Method of Characteristics predictions. The leading port grouping at station 1 exhibited near-linear correlation with geometric angle-of-attack with a sensitivity slope of approximately 1.0 — validating the flush-surface sensing approach for hypersonic airdata at these conditions. Port sensitivity degraded aft along the plate, dropping to ~30% at station 2 and ~20% at station 3, as the gas generator plume diffuses and the continuum flow region narrows. The leading 40–50% of the test article is well-characterized as a continuum supersonic flow field.
+        Phase 2 builds on the validated Phase 1 framework and expands the demonstrated flight envelope toward the full Mach 5–20 target range. A key development is the introduction of gaseous nitrogen (GN₂) injected at the nozzle exit plane to dilute and cool the exhaust plume. The GOX/ABS combustion products are energetic enough to simulate Mach 20+ conditions — far above the regime of interest for many hypersonic vehicle applications. By mixing nitrogen into the plume downstream of the nozzle, the impinging enthalpy is reduced in a controlled and predictable manner, enabling simulation of slower, lower-altitude flight conditions closer to Mach 5 and 6. An added benefit is that the nitrogen shifts the exhaust species toward a more atmospheric composition, improving test fidelity for aerothermal studies that depend on accurate gas properties at the test article surface.
       </p>
 
-      <div class="img-placeholder">
-        <div class="img-icon">📊</div>
-        <div class="img-label">// FADS Pressure & Mach Summary — Burn 6, 0° AoA</div>
-        <div class="img-caption">Stagnation pressure, surface pressures, and leading-edge Mach number time histories. Impingement Mach ≈ 1.5, stagnation pressure ≈ 21 psia, leading edge temperature ≈ 1965°C.</div>
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline>
+          <source src="./img/phase2-nitrogen-injection.mp4" type="video/mp4">
+        </video>
+        <div class="video-caption">// Gas generator with GN₂ injection at nozzle exit — plume cooling for lower-Mach equivalent flight conditions</div>
       </div>
 
-      <h3>Nitrogen Plume Cooling (Phase 2)</h3>
       <p>
-        Follow-on work introduced GN₂ injection at the nozzle exit plane to dilute the plume and reduce impinging enthalpy below the Phase 1 baseline, extending the demonstrated flight envelope from the Phase 1 Mach 7.85–8.25 regime down toward Mach 6 — and broadening the tunable range toward the full Mach 5–20 target envelope. Nitrogen injection also shifts the exhaust chemistry toward real atmospheric composition, improving fidelity for materials and aerothermal testing.
+        Alongside the nitrogen cooling work, Phase 2 is expanding the test article library to include candidate thermal protection system (TPS) materials. Samples of ceramics, ablators, and high-temperature coatings are exposed to the gas generator plume under controlled conditions — characterized by their impingement temperature, heat flux, and dynamic pressure loading — to assess survivability, recession rates, and surface degradation. This capability fills a critical gap for early-stage TPS development, where the full flight environment needs to be replicated to understand material behavior, but access to large-scale arc-jet or shock-tunnel facilities is not yet justified.
       </p>
 
-      <div class="progress-wrap">
-        <div class="progress-header">
-          <span class="progress-label">Phase 1 — Feasibility & initial enthalpy characterization</span>
-          <span class="progress-pct">Complete</span>
-        </div>
-        <div class="progress-bg"><div class="progress-fill" style="width:100%;"></div></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-header">
-          <span class="progress-label">Phase 2 — GN₂ cooling, extended Mach envelope, TPS material testing</span>
-          <span class="progress-pct">Active</span>
-        </div>
-        <div class="progress-bg"><div class="progress-fill" style="width:55%;"></div></div>
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline>
+          <source src="./img/phase2-material-testing.mp4" type="video/mp4">
+        </video>
+        <div class="video-caption">// TPS material sample under high-enthalpy plume impingement — surface response and recession characterization</div>
       </div>
     </div>
 
@@ -447,7 +324,7 @@
           <div class="big-num bright">~$</div>
           <p><strong>Access:</strong> In-house, on-demand</p>
           <p><strong>Schedule:</strong> High-turnover; multiple test cycles per week</p>
-          <p><strong>Dynamic Pressure:</strong> &gt;35 psia — simultaneously with enthalpy</p>
+          <p><strong>Dynamic Pressure:</strong> &gt;10–35 psia — simultaneously with enthalpy</p>
           <p><strong>TRL Threshold:</strong> TRL 1–4 appropriate — built for early-stage work</p>
         </div>
       </div>
@@ -458,22 +335,25 @@
       </div>
     </div>
 
-    <!-- CONCLUSIONS -->
+    <!-- NEXT STEPS -->
     <div class="section">
-      <div class="section-label">// 06 — conclusions & next steps</div>
-      <h2>Conclusions & Next Steps</h2>
+      <div class="section-label">// 06 — next steps</div>
+      <h2>Next Steps</h2>
       <p>
-        Phase 1 clearly demonstrated the feasibility of using a green-propellant hybrid rocket as a high-enthalpy gas generator for hypersonic ground testing. The test configuration produced at least a partially continuum flow field with hypersonic-equivalent enthalpy levels, dynamic pressures exceeding 35 psia, and qualitative and quantitative agreement with analytical models. The HBN leading edge survived over 80 seconds of cumulative high-enthalpy exposure with no surface ablation.
+        A central focus of current work is the development of automated design tools that translate desired simulation outputs directly into required engine parameters. Given a target flight condition — defined by any combination of Mach number, altitude, heat flux, stagnation temperature, or dynamic pressure — the tool will automatically determine the propellant combination, chamber pressure, oxidizer flow rate, and nitrogen injection settings needed to achieve that condition. This removes the need for manual iteration through CEA calculations and bridging correlations, dramatically reducing setup time for new test campaigns and opening the facility to a broader range of users.
       </p>
       <p>
-        The most significant remaining limitation is the low impingement Mach number (~1.5) resulting from the unbounded plume expansion. A properly contoured skirt extension — designed to avoid the embedded shock that plagued Phase 1 — could substantially increase exit-plane Mach and expand the simulated flight regime. The nitrogen cooling approach addresses enthalpy tuning independent of this Mach limitation, enabling a broad flight envelope within the current hardware configuration.
+        Industry partners are beginning to run test campaigns with the PRL, using the gas generator to evaluate proprietary materials and sensor technologies under hypersonic-equivalent conditions ahead of more expensive facility-level testing. This external engagement is validating the gas generator as a practical, repeatable test platform and informing the development of standardized test protocols that can support routine third-party campaigns.
+      </p>
+      <p>
+        A near-term development goal is the integration of active throttle control into the gas generator test sequence. By dynamically varying the engine operating point throughout a burn — adjusting oxidizer flow rate, chamber pressure, or nitrogen injection in real time — it will be possible to sweep through a simulated flight profile within a single test run. A vehicle climbing through the atmosphere and accelerating to cruise speed experiences a continuously changing enthalpy and dynamic pressure environment; throttle control would allow that entire trajectory to be replicated in a single burn rather than requiring a separate test for each discrete condition.
       </p>
       <ol class="steps-list">
-        <li>Mature the GN₂ plume cooling approach — characterize tunable flight envelope from Mach 6 to Mach 9 equivalent enthalpy</li>
-        <li>Design an optimized, shock-free nozzle extension to increase impingement Mach number beyond 1.5</li>
-        <li>Expand to TPS material screening — candidate ceramics, ablators, and coatings under combined enthalpy + dynamic pressure loading</li>
-        <li>Demonstrate compressed-air combustion with enriched O₂/N₂ blends to eliminate GOX dependency and improve atmospheric fidelity</li>
-        <li>Develop bridging equations mapping gas generator impingement conditions to equivalent flight conditions across the Mach 5–20 envelope</li>
+        <li>Complete automated design tool — flight condition input to engine parameter output</li>
+        <li>Expand GN₂ cooling characterization — map tunable envelope from Mach 5 through 9 equivalent enthalpy</li>
+        <li>Support industry partner test campaigns with standardized TPS and sensor screening protocols</li>
+        <li>Integrate digital throttle control for dynamic flight profile simulation within a single burn</li>
+        <li>Demonstrate compressed-air combustion with O₂/N₂ blends to improve atmospheric fidelity and eliminate GOX dependency</li>
       </ol>
     </div>
 
@@ -492,18 +372,19 @@
 
     <div class="sidebar-card">
       <div class="sidebar-card-label">// My Contribution</div>
-      <p><strong>Role:</strong> Lead Researcher</p>
-      <p style="margin-top:0.75rem;"><strong>Responsibilities:</strong> Test methodology development · Flight condition translation framework · Gas generator hardware design · Hot-fire test conductor · Data acquisition & reduction · Experimental validation · Publication author</p>
+      <p><strong>Role:</strong> Research Engineer</p>
+      <p style="margin-top:0.75rem;"><strong>Responsibilities:</strong> Concept generation · Test methodology development · Flight condition translation framework · Gas generator hardware design · Hot-fire test conductor · Data acquisition & reduction · Experimental validation · Publication author</p>
     </div>
 
     <div class="sidebar-card">
       <div class="sidebar-card-label">// Gas Generator</div>
-      <p><strong>Motor:</strong> 75-mm USU Hybrid Thrust Chamber</p>
-      <p><strong>Propellants:</strong> GOX / 3D-Printed ABS</p>
+      <p><strong>Motor:</strong> USU Hybrid Rocket Engine</p>
+      <p><strong>Propellants:</strong> GOX, Nytrox, Air / ABS, HDPE, PP</p>
       <p><strong>Ignition:</strong> Arc-ignition system (patented, USU)</p>
-      <p><strong>Throttle:</strong> Analog + patent-pending digital throttle</p>
-      <p><strong>Max Thrust:</strong> 200 N (nominal)</p>
       <p><strong>Max Burn Duration:</strong> 25 seconds</p>
+      <p><strong>Temperature Range:</strong> ~1000–2500°C</p>
+      <p><strong>Dynamic Pressure Range:</strong> 10–35 psia</p>
+      <p><strong>Simulated Flight Mach Range:</strong> Mach 5–20</p>
     </div>
 
     <div class="sidebar-card">
