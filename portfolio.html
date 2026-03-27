@@ -120,6 +120,13 @@
     .card-read-more:hover{background:var(--accent2);}
     .card-contribution{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.08em;padding:0.5rem 0;border-top:1px solid var(--border);}
     .card-contribution strong{color:var(--text);}
+    .card-locked{opacity:0.72;cursor:default;}
+    .card-locked:hover{transform:none !important;border-color:var(--border) !important;}
+    .card-locked:hover::before{transform:none !important;}
+    .lock-badge{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:#f59e0b;border:1px solid rgba(245,158,11,0.4);padding:0.18rem 0.5rem;background:rgba(245,158,11,0.07);}
+    .lock-badge::before{content:'■';font-size:0.45rem;margin-right:0.1rem;}
+    .card-restricted{font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);letter-spacing:0.06em;line-height:1.9;border-left:2px solid rgba(245,158,11,0.4);padding:0.7rem 1rem;background:rgba(0,0,0,0.2);}
+    .card-restricted em{color:#f59e0b;font-style:normal;}
     @media(max-width:900px){
       nav{padding:0 1.5rem;}.nav-links{gap:1rem;}
       .page-hero,main{padding-left:6vw;padding-right:6vw;}
@@ -161,6 +168,9 @@
     <button class="tab-btn" onclick="setFilter('sys','HRE',this)">HRE</button>
     <button class="tab-btn" onclick="setFilter('sys','SFRJ',this)">SFRJ</button>
     <button class="tab-btn" onclick="setFilter('sys','Hypersonics',this)">Hypersonics</button>
+    <button class="tab-btn" onclick="setFilter('sys','Monoprop',this)">Monoprop</button>
+    <button class="tab-btn" onclick="setFilter('sys','Structures',this)">Structures</button>
+    <button class="tab-btn" onclick="setFilter('sys','Spacecraft',this)">Spacecraft</button>
   </div>
   <span class="tab-row-label">Sort by Discipline</span>
   <div class="tab-row" id="row-disc">
@@ -310,6 +320,99 @@ const PROJECTS = [
     accent: '#e85d26',
     pubs: []
   },
+  // ── SDL PROJECTS ──────────────────────────────────────────────────────────
+  {
+    id: 'SDL-HRE-001',
+    title: 'Hydrogen Peroxide Hybrid Thruster',
+    org: ['SDL'],
+    sys: ['HRE'],
+    disc: ['Experimental', 'Design & Analysis'],
+    status: 'complete',
+    desc: 'Supported development of a miniaturized "green" HTP/ABS hybrid propulsion system for CubeSats at the Space Dynamics Laboratory, built on USU\'s patented High Performance Green Hybrid Propulsion (HPGHP) technology. GOX/ABS systems had proven reliable ignition, but replacing GOX with 90% HTP introduced ignition latency and reliability challenges due to HTP\'s high decomposition energy barrier. This work developed and validated a non-catalytic, thermal pre-lead ignition method — initiating combustion with a GOX pre-lead, then introducing HTP once the chamber was hot enough to thermally decompose it. Prototype systems were built and tested at 0.5, 1.0, and 5 N thrust levels using HTP with ABS and PMMA fuels. This early HTP hybrid work directly motivated the CatGrain thesis research.',
+    result: 'Demonstrated a viable non-catalytic ignition approach for HTP/ABS hybrid systems across three thrust levels. Presented at SmallSat 2022. Identified the ignition reliability gap that drove subsequent <a href="#USU-HRE-001" style="color:var(--cyan);text-decoration:none;" onmouseover="this.style.color=\'var(--accent2)\'" onmouseout="this.style.color=\'var(--cyan)\'">CatGrain development</a> and motivated a parallel investigation into a standalone <a href="#SDL-MONO-001" style="color:var(--cyan);text-decoration:none;" onmouseover="this.style.color=\'var(--accent2)\'" onmouseout="this.style.color=\'var(--cyan)\'">HTP monopropellant thruster</a> to solve HTP ignition from a different angle.',
+    contribution: 'Test Engineer — test stand construction, test technician, data analysis.',
+    tags: ['HTP', 'ABS', 'PMMA', 'CubeSat', 'Green Propulsion', 'SmallSat 2022'],
+    accent: '#3dd6f5',
+    pubs: [
+      {title: 'A Miniaturized Hydrogen Peroxide/ABS Based Hybrid Propulsion Systems for CubeSats', url: 'https://digitalcommons.usu.edu/smallsat/2022/all2022/116/'}
+    ]
+  },
+  {
+    id: 'SDL-MONO-001',
+    title: 'Hydrogen Peroxide Monopropellant Thruster',
+    org: ['SDL'],
+    sys: ['Monoprop'],
+    disc: ['Experimental', 'Design & Analysis'],
+    status: 'complete',
+    desc: 'Developed a hydrogen peroxide monopropellant thruster system for small spacecraft attitude control and delta-v applications. Work included catalyst bed design, system-level testing, and performance characterization using HTP as a green propellant alternative.',
+    result: 'Placeholder — add key result or milestone.',
+    contribution: 'Placeholder — add your role.',
+    tags: ['HTP', 'Monoprop', 'Catalyst Bed', 'Green Propellant', 'SDL'],
+    accent: '#3dd6f5',
+    pubs: []
+  },
+  {
+    id: 'SDL-STRUCT-001',
+    title: 'Volume-Optimized 3D Printed Titanium Propellant Tank',
+    org: ['SDL'],
+    sys: ['Structures'],
+    disc: ['Design & Analysis', 'Additive Manufacturing'],
+    status: 'complete',
+    desc: 'The design, analyze, build, and qualification-test a Ti-6Al-4V volume-optimized propellant tank with an integral printed propellant management device (PMD) for small satellite propulsion. Unlike conventional tanks — which are expensive, geometrically limited, and volumetrically inefficient inside cuboid satellite buses — these tanks are printed directly for the mission-specific cuboid envelope, maximizing delta-V per volume while cutting lead time and cost in half. Rated to 400 psi MEOP and compatible with both hydrazine and green propellants, the design is scalable from 1U CubeSats to ESPA-class spacecraft. The full qualification campaign encompassed design, FEA, AM build, heat treatment, post-machining, precision cleaning, specimen testing, and qualification testing.',
+    result: 'Submitted for patent, under review. Successfully flight qualified a half-ESPA sized tank. Demonstrated scaling feasibility with full-ESPA sized tank. Obtained a license contract with spacecraft supplier to mass produce these tanks. Follow-on programs awarded to develop additional versions for other similar and smaller bus sizes, including a 1.5U CubeSat. Total awarded revenue from licensing ~$5M to date.',
+    contribution: 'AM Applications Engineer — PMD design support, requirements development, precision cleaning, qualification testing support.',
+    tags: ['Ti-6Al-4V', 'AM', 'Propellant Tank', 'PMD', 'SmallSat', 'ESPA', 'Velo3D', 'SmallSat 2024'],
+    accent: '#a78bfa',
+    readMore: 'projects/tanks/tanks.html',
+    pubs: [
+      {title: 'Qualification of 3D-Printed Titanium Volume-Optimized Propulsion Tanks for Small Satellites', url: 'https://digitalcommons.usu.edu/smallsat/2024/all2024/128/'}
+    ]
+  },
+  {
+    id: 'SDL-MISC-001',
+    title: 'SunRISE Propulsion System Performance Validation',
+    org: ['SDL'],
+    sys: ['Spacecraft'],
+    disc: ['Experimental', 'Design & Analysis'],
+    status: 'complete',
+    desc: 'Conducted propulsion system performance validation for the NASA SunRISE (Sun Radio Interferometer Space Experiment) mission — a formation-flying CubeSat constellation designed to study solar radio bursts from beyond Earth\'s ionosphere. Work supported verification of the propulsion subsystem ahead of launch.',
+    result: 'Placeholder — add key result or milestone.',
+    contribution: 'Placeholder — add your role.',
+    tags: ['SunRISE', 'NASA', 'CubeSat', 'Formation Flying', 'Performance Validation', 'SDL'],
+    accent: '#f5a623',
+    pubs: []
+  },
+  {
+    id: 'SDL-CAGE-001',
+    title: 'The Cage',
+    org: ['SDL'],
+    sys: ['Spacecraft'],
+    disc: ['Experimental', 'Design & Analysis'],
+    status: 'complete',
+    locked: true,
+    desc: '',
+    result: '',
+    contribution: '',
+    tags: ['SDL'],
+    accent: '#f59e0b',
+    pubs: []
+  },
+  {
+    id: 'SDL-PLUME-001',
+    title: 'Plume Impingement Analysis',
+    org: ['SDL'],
+    sys: ['Spacecraft'],
+    disc: ['Modeling & Simulation', 'Design & Analysis'],
+    status: 'complete',
+    locked: true,
+    desc: '',
+    result: '',
+    contribution: '',
+    tags: ['SDL'],
+    accent: '#f59e0b',
+    pubs: []
+  },
+  // ── USU PROJECTS (existing) ───────────────────────────────────────────────
   {
     id: 'USU-SFRJ-003',
     title: 'Functionally Graded Fuel via Additive Manufacturing',
@@ -349,7 +452,8 @@ function cardMatches(p) {
 function render() {
   const visible = PROJECTS.filter(cardMatches);
   const modelCards = visible.filter(p => p.disc.includes('Modeling & Simulation') && !p.disc.includes('Experimental') && !p.disc.includes('Additive Manufacturing'));
-  const projectCards = visible.filter(p => !modelCards.includes(p));
+  const projectCards = visible.filter(p => !modelCards.includes(p) && !p.locked);
+  const lockedCards = visible.filter(p => p.locked);
   document.getElementById('visible-projects').textContent = projectCards.length;
   document.getElementById('visible-models').textContent = modelCards.length;
   document.getElementById('visible-total').textContent = visible.length;
@@ -382,7 +486,8 @@ function render() {
     // A card goes to Models & Analysis Tools ONLY if Modeling & Simulation is present and Experimental/AM are NOT
     // Design & Analysis alone is not enough to keep it in Models — defaults to Projects
     const models = cards.filter(p => p.disc.includes('Modeling & Simulation') && !p.disc.includes('Experimental') && !p.disc.includes('Additive Manufacturing'));
-    const projects = cards.filter(p => !models.includes(p));
+    const locked = cards.filter(p => p.locked);
+    const projects = cards.filter(p => !models.includes(p) && !locked.includes(p));
 
     let subHTML = '';
     if (projects.length > 0) {
@@ -392,6 +497,10 @@ function render() {
     if (models.length > 0) {
       subHTML += `<div class="sub-header"><span class="sub-header-line"></span><span class="sub-header-label">Models & Analysis Tools</span><span class="sub-header-line"></span></div>
       <div class="project-grid">${models.map(cardHTML).join('')}</div>`;
+    }
+    if (locked.length > 0) {
+      subHTML += `<div class="sub-header"><span class="sub-header-line"></span><span class="sub-header-label">Restricted Projects</span><span class="sub-header-line"></span></div>
+      <div class="project-grid">${locked.map(cardHTML).join('')}</div>`;
     }
 
     html += `<div class="section-group">
@@ -410,11 +519,26 @@ function cardHTML(p) {
   const sysTags = p.sys.map(s => `<span class="tag sys">${s}</span>`).join('');
   const discTags = p.disc.map(d => `<span class="tag disc">${d}</span>`).join('');
   const orgTags = p.org.map(o => `<span class="tag org-${o.toLowerCase()}">${o}</span>`).join('');
-  const plainTags = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  const plainTags = p.tags.filter(t => !p.org.includes(t)).map(t => `<span class="tag">${t}</span>`).join('');
   const statusLabel = p.status === 'active' ? 'Active' : 'Complete';
   const statusCls = p.status === 'active' ? 'status-active' : 'status-complete';
 
-  return `<div class="project-card" style="--card-accent:${p.accent}">
+  if (p.locked) {
+    return `<div class="project-card card-locked" style="--card-accent:#f59e0b">
+      <div class="card-header">
+        <div class="card-id">// ${p.id}</div>
+        <span class="lock-badge">Restricted</span>
+      </div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-tags">${orgTags}${sysTags}${discTags}</div>
+      <div class="card-restricted">
+        Details for this project are <em>not publicly available</em>.<br>
+        Contact me directly for more information.
+      </div>
+    </div>`;
+  }
+
+  return `<div class="project-card" id="${p.id}" style="--card-accent:${p.accent}">
     <div class="card-header">
       <div class="card-id">// ${p.id}</div>
       <span class="card-status ${statusCls}">${statusLabel}</span>
@@ -432,6 +556,35 @@ function cardHTML(p) {
     ${p.readMore ? `<a class="card-read-more" href="${p.readMore}">Read More →</a>` : ''}
   </div>`;
 }
+
+// Smart anchor nav — ensures target card is visible before scrolling
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const targetId = a.getAttribute('href').slice(1);
+  if (!targetId) return;
+  e.preventDefault();
+  const target = document.getElementById(targetId);
+  if (!target) {
+    // Card may be filtered out — reset all filters first
+    ['org','sys','disc'].forEach(type => {
+      filters[type] = 'all';
+      document.querySelectorAll(`#row-${type} .tab-btn`).forEach((b,i) => {
+        b.classList.toggle('active', i === 0);
+      });
+    });
+    render();
+  }
+  requestAnimationFrame(() => {
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.style.transition = 'box-shadow 0.4s ease';
+      el.style.boxShadow = '0 0 0 2px var(--cyan)';
+      setTimeout(() => { el.style.boxShadow = ''; }, 1800);
+    }
+  });
+});
 
 render();
 </script>
