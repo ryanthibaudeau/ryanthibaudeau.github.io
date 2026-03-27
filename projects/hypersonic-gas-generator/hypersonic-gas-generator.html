@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hypersonic Gas Generator — Ryan Thibaudeau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#080c10;--bg2:rgba(13,21,32,0.88);--surface:rgba(17,25,35,0.85);
+      --border:#1e2d3d;--accent:#f5a623;--accent2:#e85d26;--cyan:#3dd6f5;
+      --text:#c8d8e8;--text-dim:#5a7a9a;--text-bright:#eaf2ff;
+      --mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;--body:'Barlow',sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;background:#080c10;}
+    body{background:transparent;color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:60px;background:rgba(8,12,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--mono);font-size:0.8rem;color:var(--cyan);letter-spacing:0.1em;text-decoration:none;}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;position:relative;}
+    .nav-links a:hover{color:var(--text-bright);}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transition:transform 0.2s;}
+    .nav-links a:hover::after{transform:scaleX(1);}
+
+    .back-bar{position:relative;z-index:1;padding:1.25rem 10vw;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .back-link{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;}
+    .back-link:hover{color:var(--cyan);}
+    .back-link::before{content:'← ';}
+
+    .page-hero{position:relative;z-index:1;padding:5rem 10vw 4rem;border-bottom:1px solid var(--border);background:var(--bg2);}
+    /* Subtle warm glow behind hero to differentiate from cyan-themed projects */
+    .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%, rgba(245,166,35,0.04) 0%, transparent 70%);pointer-events:none;}
+    .project-id{font-family:var(--mono);font-size:0.62rem;color:var(--accent);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem;}
+    .page-hero h1{font-family:var(--head);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:700;color:var(--text-bright);margin-bottom:1rem;line-height:1.1;}
+    .hero-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+    .htag{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.6rem;border:1px solid;}
+    .htag-org{color:#4ade80;border-color:rgba(74,222,128,0.3);}
+    .htag-sys{color:var(--accent);border-color:rgba(245,166,35,0.3);}
+    .htag-disc{color:#a78bfa;border-color:rgba(167,139,250,0.25);}
+    .htag-status{color:var(--text-dim);border-color:var(--border);}
+
+    .stat-row{display:flex;gap:3rem;flex-wrap:wrap;padding-top:1.5rem;border-top:1px solid var(--border);}
+    .stat-item{display:flex;flex-direction:column;gap:0.2rem;}
+    .stat-value{font-family:var(--head);font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1;}
+    .stat-label{font-family:var(--mono);font-size:0.58rem;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;}
+
+    .content-wrap{position:relative;z-index:1;display:grid;grid-template-columns:2fr 1fr;gap:0;align-items:start;}
+    .main-content{padding:4rem 4rem 6rem 10vw;border-right:1px solid var(--border);}
+    .sidebar{padding:4rem 10vw 4rem 3rem;position:sticky;top:80px;}
+
+    .section{margin-bottom:3.5rem;}
+    .section-label{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;}
+    .section h2{font-family:var(--head);font-size:1.6rem;font-weight:700;color:var(--text-bright);margin-bottom:1.25rem;position:relative;display:inline-block;}
+    .section h2::after{content:'';position:absolute;bottom:-6px;left:0;width:50%;height:2px;background:linear-gradient(90deg,var(--accent),transparent);}
+    .section h3{font-family:var(--head);font-size:1.15rem;font-weight:600;color:var(--text-bright);margin:1.5rem 0 0.75rem;}
+    .section p{font-size:0.95rem;line-height:1.85;color:var(--text);margin-bottom:1rem;}
+    .section p strong{color:var(--text-bright);font-weight:600;}
+
+    .callout{background:rgba(0,0,0,0.3);border-left:3px solid var(--accent);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .callout-label{font-family:var(--mono);font-size:0.55rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.4rem;}
+    .callout p{font-size:0.88rem;line-height:1.7;color:var(--text);margin:0;}
+
+    .result-callout{background:rgba(0,0,0,0.3);border-left:3px solid var(--cyan);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .result-callout .callout-label{color:var(--cyan);}
+
+    .img-placeholder{background:var(--surface);border:1px dashed var(--border);padding:3rem 2rem;text-align:center;margin:1.5rem 0;position:relative;}
+    .img-placeholder .img-label{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;}
+    .img-placeholder .img-caption{font-size:0.82rem;color:var(--text-dim);font-style:italic;}
+    .img-placeholder .img-icon{font-size:2rem;opacity:0.2;margin-bottom:0.75rem;}
+
+    .img-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+
+    .comparison-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;}
+    .comparison-table th{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;text-align:left;padding:0.6rem 1rem;border-bottom:1px solid var(--border);}
+    .comparison-table td{padding:0.6rem 1rem;border-bottom:1px solid rgba(30,45,61,0.5);color:var(--text);}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table .highlight td{color:var(--text-bright);background:rgba(245,166,35,0.05);}
+    .comparison-table .val-good{color:#4ade80;}
+
+    /* COST COMPARISON: facility vs. USU */
+    .cost-compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+    .cost-card{background:var(--surface);border:1px solid var(--border);padding:1.25rem;}
+    .cost-card-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
+    .cost-card-label.legacy{color:var(--text-dim);}
+    .cost-card-label.usu{color:var(--accent);}
+    .cost-card p{font-size:0.82rem;line-height:1.65;color:var(--text-dim);}
+    .cost-card p strong{color:var(--text);}
+    .cost-card .big-num{font-family:var(--head);font-size:2rem;font-weight:700;line-height:1;margin:0.5rem 0;}
+    .cost-card .big-num.dim{color:var(--text-dim);}
+    .cost-card .big-num.bright{color:var(--accent);}
+
+    /* PROGRESS BAR */
+    .progress-wrap{margin:1.5rem 0;}
+    .progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;}
+    .progress-label{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);letter-spacing:0.12em;text-transform:uppercase;}
+    .progress-pct{font-family:var(--mono);font-size:0.62rem;color:var(--accent);}
+    .progress-bg{height:4px;background:rgba(30,45,61,0.8);position:relative;}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+
+    .sidebar-card{background:var(--surface);border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem;}
+    .sidebar-card-label{font-family:var(--mono);font-size:0.58rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .sidebar-card p{font-size:0.82rem;line-height:1.65;color:var(--text-dim);}
+    .sidebar-card p strong{color:var(--text);}
+    .sidebar-link{display:block;font-family:var(--mono);font-size:0.65rem;color:var(--cyan);text-decoration:none;letter-spacing:0.08em;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
+    .sidebar-link:last-child{border-bottom:none;}
+    .sidebar-link:hover{color:var(--accent);}
+    .sidebar-link::before{content:'→ ';color:var(--accent2);}
+
+    .steps-list{list-style:none;margin:1rem 0;counter-reset:step-counter;}
+    .steps-list li{padding:0.6rem 0 0.6rem 1.5rem;position:relative;font-size:0.9rem;line-height:1.6;color:var(--text);border-bottom:1px solid var(--border);}
+    .steps-list li:last-child{border-bottom:none;}
+    .steps-list li::before{content:counter(step-counter);counter-increment:step-counter;position:absolute;left:0;font-family:var(--mono);font-size:0.6rem;color:var(--accent);top:0.75rem;}
+
+    /* MACH RANGE VISUAL */
+    .mach-bar-wrap{margin:1.5rem 0;background:var(--surface);border:1px solid var(--border);padding:1.25rem;}
+    .mach-bar-label{font-family:var(--mono);font-size:0.55rem;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;}
+    .mach-track{position:relative;height:28px;background:rgba(0,0,0,0.3);border:1px solid var(--border);}
+    .mach-fill{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,rgba(245,166,35,0.35),rgba(232,93,38,0.55));border-right:2px solid var(--accent);}
+    .mach-ticks{display:flex;justify-content:space-between;margin-top:0.4rem;}
+    .mach-tick{font-family:var(--mono);font-size:0.52rem;color:var(--text-dim);}
+    .mach-tick.lit{color:var(--accent);}
+    .mach-range-label{font-family:var(--mono);font-size:0.62rem;color:var(--accent);text-align:center;margin-top:0.5rem;}
+
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem 10vw;display:flex;justify-content:space-between;align-items:center;background:var(--bg2);}
+    footer .copy{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+    footer .footer-links{display:flex;gap:1.5rem;}
+    footer a{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;transition:color 0.2s;}
+    footer a:hover{color:var(--cyan);}
+
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scan 8s linear infinite;opacity:0.12;pointer-events:none;z-index:200;}
+    @keyframes scan{0%{top:-10px;}100%{top:100vh;}}
+
+    @media(max-width:1024px){
+      .content-wrap{grid-template-columns:1fr;}
+      .main-content{border-right:none;padding:3rem 6vw;}
+      .sidebar{position:static;padding:0 6vw 3rem;}
+      nav{padding:0 1.5rem;}.nav-links{gap:1rem;}
+      footer{padding:2rem 6vw;}
+      .back-bar{padding:1.25rem 6vw;}
+      .cost-compare{grid-template-columns:1fr;}
+      .img-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav>
+  <a class="nav-logo" href="../../home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="../../home.html">Home</a></li>
+    <li><a href="../../portfolio.html">Portfolio</a></li>
+    <li><a href="../../publications.html">Publications</a></li>
+    <li><a href="../../CV.html">CV</a></li>
+    <li><a href="../../contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="back-bar">
+  <a class="back-link" href="../../portfolio.html">Back to Portfolio</a>
+</div>
+
+<div class="page-hero">
+  <div class="project-id">// USU-HYP-001</div>
+  <h1>Hypersonic Gas Generator</h1>
+  <div class="hero-tags">
+    <span class="htag htag-org">USU</span>
+    <span class="htag htag-sys">Hypersonics</span>
+    <span class="htag htag-disc">Experimental</span>
+    <span class="htag htag-disc">Design & Analysis</span>
+    <span class="htag htag-disc">Modeling & Simulation</span>
+    <span class="htag htag-status">Active</span>
+  </div>
+  <div class="stat-row">
+    <div class="stat-item">
+      <div class="stat-value">Mach 5–20</div>
+      <div class="stat-label">Simulated Flight Envelope</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">~1790–1960°C</div>
+      <div class="stat-label">Impingement Temperature Range</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">Mach 7.85–8.25</div>
+      <div class="stat-label">Equivalent Stratospheric Mach</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">10+</div>
+      <div class="stat-label">Hot-Fire Tests</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">&gt;35 psia</div>
+      <div class="stat-label">Peak Dynamic Pressure</div>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <div class="main-content">
+
+    <!-- BACKGROUND -->
+    <div class="section">
+      <div class="section-label">// 01 — background</div>
+      <h2>Background & Motivation</h2>
+      <p>
+        Both NASA and the Department of Defense are pursuing a class of endo-atmospheric hypersonic vehicles designed to sustain stratospheric flight for extended periods. Hypersonic flight — generally Mach 5 and above — presents extreme technical challenges that are generally not encountered in other flight regimes: chemical dissociation, material ablation, shock-induced heating, and coupled aero-thermochemical effects that computational methods alone cannot fully resolve. Experimental testing remains the backbone of advanced hypersonic development.
+      </p>
+      <p>
+        The problem is access. The existing generation of high-enthalpy test facilities — large shock tunnels, arc-jet systems, and ballistic ranges — is extremely expensive to operate and available to only the most mature, high-TRL programs. Novel concepts and early-stage materials can rarely gain access, creating a bottleneck that slows innovation and increases cost throughout the development cycle.
+      </p>
+
+      <div class="callout">
+        <div class="callout-label">// The Testing Gap</div>
+        <p>Arc-jet facilities are the workhorse of high-enthalpy ground testing, but they produce stagnation flows — high enthalpy, near-zero dynamic pressure. Shock tunnels deliver high Mach numbers but with very short run times measured in milliseconds. Neither facility simultaneously replicates the combined enthalpy <em>and</em> dynamic pressure environment of sustained stratospheric hypersonic flight. And neither is affordable for low-TRL research.</p>
+      </div>
+
+      <p>
+        This project investigates a fundamentally different approach: repurposing a laboratory-scale hybrid rocket engine as a high-enthalpy gas generator whose exhaust plume impinges directly on a subscale test article — simultaneously simulating both the enthalpy and dynamic pressure of stratospheric hypersonic flight at a fraction of the cost of conventional facilities.
+      </p>
+    </div>
+
+    <!-- CONCEPT -->
+    <div class="section">
+      <div class="section-label">// 02 — concept & approach</div>
+      <h2>Concept & Technical Approach</h2>
+      <p>
+        The gas generator is built on a legacy 75-mm hybrid thrust chamber previously developed at USU's Propulsion Research Laboratory, originally rated for 200 N thrust and 25-second burn duration using GOX/ABS propellants. For hypersonic testing, the motor is reconfigured as an open-plume gas generator — the exhaust flow is directed onto a downstream test article rather than used for thrust.
+      </p>
+
+      <h3>Propellant Selection & Enthalpy Tuning</h3>
+      <p>
+        <strong>GOX/ABS combustion</strong> produces flame temperatures exceeding 2300°C, with exhaust plume specific enthalpies equivalent to Mach 25 stratospheric flight — well above the target range. To tune down to Mach 5–10 conditions, two approaches were investigated:
+      </p>
+      <p>
+        The first approach — switching the oxidizer from GOX to compressed air — significantly reduces throat temperatures to 700–1300°C, with equivalent stratospheric enthalpies of Mach 8–10. However, early testing revealed that the motor cannot sustain combustion with compressed air alone. A GOX pre-lead can achieve initial ignition, but as airflow enters the combustion chamber the plume becomes increasingly dirty and eventually snuffs after approximately 5–6 seconds. This approach is ongoing for future development.
+      </p>
+      <p>
+        The second approach, demonstrated in subsequent work, introduces <strong>gaseous nitrogen (GN₂) injection at the nozzle exit plane</strong> to dilute and cool the GOX/ABS plume. This technique reduces impinging enthalpy to levels consistent with Mach 6–9 flight while also shifting exhaust chemistry closer to real atmospheric conditions — making the plume more representative of genuine hypersonic flight.
+      </p>
+
+      <div class="callout">
+        <div class="callout-label">// Propellant Chemistry Summary</div>
+        <p>GOX/ABS (stoichiometric O/F ≈ 2.9) yields Mach 25-equivalent enthalpies at peak temperature. Operating fuel-rich at O/F 3.0–4.25 reduces plume temperature to the 2200–2750°C range. With GN₂ dilution at the nozzle exit, impingement enthalpies are tuned to Mach 6–9 equivalent — covering the majority of the DoD's target flight envelope.</p>
+      </div>
+
+      <h3>Gas Generator Hardware</h3>
+      <p>
+        For the high-enthalpy test campaign, the legacy 75-mm motor case was shortened to 8.5 inches with the main fuel grain section reduced to 10 cm — a compact geometry that can be entirely 3D-printed on USU's Fortus 320 printer, enabling rapid grain fabrication and turnover between tests. The fuel grain design was adapted from the Nytrox/ABS optimized configuration: 6.35 cm diameter, 10 cm long, 1.25 cm initial port diameter.
+      </p>
+      <p>
+        A round-to-oval nozzle extension skirt was initially incorporated to redirect the axi-symmetric exhaust plume into a quasi-2D flow field more representative of a wing leading edge flow. However, testing revealed an embedded normal shock in the skirt extension that reduced exit-plane Mach number to approximately 0.15–0.2 and cut thrust by ~50% — the skirt configuration was subsequently removed in favor of the stock nozzle for all instrumented test article tests.
+      </p>
+
+      <div class="img-placeholder">
+        <div class="img-icon">⚙</div>
+        <div class="img-label">// Gas Generator Assembly</div>
+        <div class="img-caption">75-mm hybrid motor configured as high-enthalpy gas generator — shortened ABS fuel grain, round-to-oval nozzle extension (characterization tests), and test article mounting assembly.</div>
+      </div>
+
+      <h3>High-Enthalpy Test Article</h3>
+      <p>
+        The test article is a 12.5° half-angle wedge with a 0.5" radius blunted leading edge constructed from <strong>hexagonal boron nitride (HBN)</strong> — an anisotropic ceramic with extremely high specific heat capacity, high-temperature strength, and a unique thermal conductivity profile. With the low-conductivity α-plane oriented radially and the high-conductivity β-plane aligned longitudinally, the HBN rod acts as an insulative absorber at the surface while conducting heat axially along its length — enabling survivability under prolonged high-enthalpy impingement.
+      </p>
+      <p>
+        The test article mounts 10 flush surface pressure taps (5 upper, 5 lower) distributed along the longitudinal axis, plus a stagnation pressure port at the HBN leading edge. Dual-band fiber-optic cables inserted into the HBN rod provide non-contact radiometric temperature measurements via Wien's law curve-fitting of the sensed black-body spectrum — covering both visible/near-infrared and mid-infrared ranges.
+      </p>
+
+      <div class="img-grid">
+        <div class="img-placeholder" style="margin:0;">
+          <div class="img-icon">△</div>
+          <div class="img-label">// Test Article Geometry</div>
+          <div class="img-caption">12.5° wedge with HBN leading edge, flush FADS pressure ports, and fiber-optic stagnation temperature sensors.</div>
+        </div>
+        <div class="img-placeholder" style="margin:0;">
+          <div class="img-icon">◎</div>
+          <div class="img-label">// HBN Leading Edge</div>
+          <div class="img-caption">Post-test HBN rod showing minimal surface ablation after 80+ seconds of cumulative high-enthalpy exposure.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEST CAMPAIGN -->
+    <div class="section">
+      <div class="section-label">// 03 — test campaign</div>
+      <h2>Test Campaign</h2>
+      <p>
+        A 10-test hot-fire campaign was conducted at the USU Propulsion Research Laboratory BLAST facility. The first five tests were gas-generator characterization burns — evaluating compressed-air combustion, nozzle skirt behavior, and plume structure. The final five tests used the fully-instrumented test article with all pressure and fiber-optic sensors active.
+      </p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Test Group</th>
+            <th>Configuration</th>
+            <th>Objective</th>
+            <th>Tests</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Characterization</td>
+            <td>GOX/ABS, no test article</td>
+            <td>Air combustion trials, skirt evaluation, plume temperature calibration</td>
+            <td>5</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Instrumented</strong></td>
+            <td>GOX/ABS, no skirt, full FADS instrumentation</td>
+            <td>Pressure distribution, AoA sensing, impingement temperature measurement</td>
+            <td><strong>5</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        For all instrumented tests, the nozzle exit plane was fixed 12 inches (30.48 cm) ahead of the HBN leading edge, visually aligned to the leading edge centerline. Angle-of-attack was varied across 0°, 5°, and 8° settings to characterize the FADS pressure response and validate the Method of Characteristics pressure model.
+      </p>
+
+      <div class="img-placeholder">
+        <div class="img-icon">🔥</div>
+        <div class="img-label">// Hot-Fire — Plume Impingement</div>
+        <div class="img-caption">Gas generator exhaust plume (no skirt) impinging on the 12.5° wedge test article — bow shock clearly visible at the HBN leading edge.</div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="section">
+      <div class="section-label">// 04 — results</div>
+      <h2>Results & Performance</h2>
+
+      <h3>Enthalpy & Temperature Results</h3>
+      <p>
+        Fiber-optic flame temperature measurements confirmed GOX/ABS combustion chamber temperatures of approximately <strong>2730°C</strong> at ~95% combustion efficiency. After accounting for nozzle expansion and unbounded plume losses, the impingement temperature at the test article leading edge ranged from <strong>1781–1960°C</strong> across the test series — consistent with the equivalent enthalpy of stratospheric flight at <strong>Mach 7.85 to 8.25</strong>.
+      </p>
+
+      <!-- Mach range bar -->
+      <div class="mach-bar-wrap">
+        <div class="mach-bar-label">// Simulated Stratospheric Flight Mach — Achieved Envelope (Phase 1)</div>
+        <div class="mach-track">
+          <!-- Scale: Mach 0–20 → 0–100%; Mach 7.85 = 39.25%, Mach 8.25 = 41.25% -->
+          <div class="mach-fill" style="left:34%;width:8%;"></div>
+        </div>
+        <div class="mach-ticks">
+          <span class="mach-tick">M0</span>
+          <span class="mach-tick">M5</span>
+          <span class="mach-tick lit">M7.85</span>
+          <span class="mach-tick lit">M8.25</span>
+          <span class="mach-tick">M10</span>
+          <span class="mach-tick">M15</span>
+          <span class="mach-tick">M20</span>
+        </div>
+        <div class="mach-range-label">Phase 1 demonstrated range: Mach 7.85–8.25 equivalent enthalpy (expanding to Mach 5–20 with N₂ cooling)</div>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Combustion Chamber Flame Temp.</td>
+            <td class="val-good">~2730°C</td>
+            <td>GOX/ABS, ~95% η<sub>c*</sub></td>
+          </tr>
+          <tr>
+            <td>Impingement Temperature Range</td>
+            <td class="val-good">1781–1960°C</td>
+            <td>O/F 3.15–4.25, 10-test campaign</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Equivalent Stratospheric Mach</strong></td>
+            <td class="val-good"><strong>Mach 7.85–8.25</strong></td>
+            <td>Real-gas air calc., γ = 1.274 @ ~2000 K</td>
+          </tr>
+          <tr>
+            <td>Peak Dynamic Pressure</td>
+            <td class="val-good">&gt;35 psia</td>
+            <td>Exceeds arc-jet facility capability</td>
+          </tr>
+          <tr>
+            <td>Impingement Mach Number</td>
+            <td>~1.5</td>
+            <td>Measured via Rayleigh Pitot equation, γ = 1.2</td>
+          </tr>
+          <tr>
+            <td>HBN Leading Edge Survivability</td>
+            <td class="val-good">&gt;80 seconds</td>
+            <td>Cumulative high-enthalpy exposure, no ablation</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="result-callout">
+        <div class="callout-label">// Key Result</div>
+        <p>The hybrid gas generator successfully demonstrated simultaneous simulation of hypersonic-equivalent enthalpy <em>and</em> dynamic pressure — a combination not achievable in conventional arc-jet facilities. Leading-edge impingement temperatures ranging from 1781–1960°C correspond to stratospheric flight Mach numbers of approximately 7.85–8.25. Both qualitative and quantitative agreement with 2-D Method of Characteristics models was confirmed across all five fully-instrumented test burns.</p>
+      </div>
+
+      <h3>Pressure & Angle-of-Attack Sensing</h3>
+      <p>
+        FADS pressure data from all five instrumented tests were compared against 2-D Method of Characteristics predictions. The leading port grouping at station 1 exhibited near-linear correlation with geometric angle-of-attack with a sensitivity slope of approximately 1.0 — validating the flush-surface sensing approach for hypersonic airdata at these conditions. Port sensitivity degraded aft along the plate, dropping to ~30% at station 2 and ~20% at station 3, as the gas generator plume diffuses and the continuum flow region narrows. The leading 40–50% of the test article is well-characterized as a continuum supersonic flow field.
+      </p>
+
+      <div class="img-placeholder">
+        <div class="img-icon">📊</div>
+        <div class="img-label">// FADS Pressure & Mach Summary — Burn 6, 0° AoA</div>
+        <div class="img-caption">Stagnation pressure, surface pressures, and leading-edge Mach number time histories. Impingement Mach ≈ 1.5, stagnation pressure ≈ 21 psia, leading edge temperature ≈ 1965°C.</div>
+      </div>
+
+      <h3>Nitrogen Plume Cooling (Phase 2)</h3>
+      <p>
+        Follow-on work introduced GN₂ injection at the nozzle exit plane to dilute the plume and reduce impinging enthalpy below the Phase 1 baseline, extending the demonstrated flight envelope from the Phase 1 Mach 7.85–8.25 regime down toward Mach 6 — and broadening the tunable range toward the full Mach 5–20 target envelope. Nitrogen injection also shifts the exhaust chemistry toward real atmospheric composition, improving fidelity for materials and aerothermal testing.
+      </p>
+
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">Phase 1 — Feasibility & initial enthalpy characterization</span>
+          <span class="progress-pct">Complete</span>
+        </div>
+        <div class="progress-bg"><div class="progress-fill" style="width:100%;"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">Phase 2 — GN₂ cooling, extended Mach envelope, TPS material testing</span>
+          <span class="progress-pct">Active</span>
+        </div>
+        <div class="progress-bg"><div class="progress-fill" style="width:55%;"></div></div>
+      </div>
+    </div>
+
+    <!-- FACILITY COMPARISON -->
+    <div class="section">
+      <div class="section-label">// 05 — cost & access context</div>
+      <h2>Cost & Access Comparison</h2>
+      <p>
+        The primary value proposition of the hybrid gas generator approach is drastically reduced cost and dramatically improved access — enabling early-TRL hypersonic testing that would otherwise be impossible within the budget and schedule constraints of most university and small-company programs.
+      </p>
+
+      <div class="cost-compare">
+        <div class="cost-card">
+          <div class="cost-card-label legacy">// Conventional Arc-Jet Facility</div>
+          <div class="big-num dim">$$$</div>
+          <p><strong>Access:</strong> Extremely limited — reserved for high-TRL programs</p>
+          <p><strong>Schedule:</strong> Months of queue time; facility-driven test cadence</p>
+          <p><strong>Dynamic Pressure:</strong> Near-zero (stagnation flow only)</p>
+          <p><strong>TRL Threshold:</strong> Typically TRL 5+ required for access</p>
+        </div>
+        <div class="cost-card">
+          <div class="cost-card-label usu">// USU Hybrid Gas Generator</div>
+          <div class="big-num bright">~$</div>
+          <p><strong>Access:</strong> In-house, on-demand</p>
+          <p><strong>Schedule:</strong> High-turnover; multiple test cycles per week</p>
+          <p><strong>Dynamic Pressure:</strong> &gt;35 psia — simultaneously with enthalpy</p>
+          <p><strong>TRL Threshold:</strong> TRL 1–4 appropriate — built for early-stage work</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-label">// Unique Capability</div>
+        <p>Conventional arc-jet facilities produce stagnation flows with high enthalpy but near-zero dynamic pressure — they cannot simultaneously reproduce both the thermal <em>and</em> mechanical loading of stratospheric hypersonic flight. The hybrid gas generator achieves dynamic pressures exceeding 35 psia in combination with hypersonic-equivalent enthalpy — a test condition not available in existing arc-jet infrastructure.</p>
+      </div>
+    </div>
+
+    <!-- CONCLUSIONS -->
+    <div class="section">
+      <div class="section-label">// 06 — conclusions & next steps</div>
+      <h2>Conclusions & Next Steps</h2>
+      <p>
+        Phase 1 clearly demonstrated the feasibility of using a green-propellant hybrid rocket as a high-enthalpy gas generator for hypersonic ground testing. The test configuration produced at least a partially continuum flow field with hypersonic-equivalent enthalpy levels, dynamic pressures exceeding 35 psia, and qualitative and quantitative agreement with analytical models. The HBN leading edge survived over 80 seconds of cumulative high-enthalpy exposure with no surface ablation.
+      </p>
+      <p>
+        The most significant remaining limitation is the low impingement Mach number (~1.5) resulting from the unbounded plume expansion. A properly contoured skirt extension — designed to avoid the embedded shock that plagued Phase 1 — could substantially increase exit-plane Mach and expand the simulated flight regime. The nitrogen cooling approach addresses enthalpy tuning independent of this Mach limitation, enabling a broad flight envelope within the current hardware configuration.
+      </p>
+      <ol class="steps-list">
+        <li>Mature the GN₂ plume cooling approach — characterize tunable flight envelope from Mach 6 to Mach 9 equivalent enthalpy</li>
+        <li>Design an optimized, shock-free nozzle extension to increase impingement Mach number beyond 1.5</li>
+        <li>Expand to TPS material screening — candidate ceramics, ablators, and coatings under combined enthalpy + dynamic pressure loading</li>
+        <li>Demonstrate compressed-air combustion with enriched O₂/N₂ blends to eliminate GOX dependency and improve atmospheric fidelity</li>
+        <li>Develop bridging equations mapping gas generator impingement conditions to equivalent flight conditions across the Mach 5–20 envelope</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Project Info</div>
+      <p><strong>Organization:</strong> Utah State University</p>
+      <p><strong>Lab:</strong> Propulsion Research Laboratory</p>
+      <p><strong>Funding:</strong> USU Office of Research — Research Catalyst (RC) Program</p>
+      <p><strong>Status:</strong> Active — Phase 1 Complete, Phase 2 Ongoing</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// My Contribution</div>
+      <p><strong>Role:</strong> Lead Researcher</p>
+      <p style="margin-top:0.75rem;"><strong>Responsibilities:</strong> Test methodology development · Flight condition translation framework · Gas generator hardware design · Hot-fire test conductor · Data acquisition & reduction · Experimental validation · Publication author</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Gas Generator</div>
+      <p><strong>Motor:</strong> 75-mm USU Hybrid Thrust Chamber</p>
+      <p><strong>Propellants:</strong> GOX / 3D-Printed ABS</p>
+      <p><strong>Ignition:</strong> Arc-ignition system (patented, USU)</p>
+      <p><strong>Throttle:</strong> Analog + patent-pending digital throttle</p>
+      <p><strong>Max Thrust:</strong> 200 N (nominal)</p>
+      <p><strong>Max Burn Duration:</strong> 25 seconds</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Test Article</div>
+      <p><strong>Geometry:</strong> 12.5° half-angle wedge</p>
+      <p><strong>Leading Edge:</strong> Hexagonal boron nitride (HBN)</p>
+      <p><strong>Sensing:</strong> 10× flush FADS pressure ports + stagnation tap</p>
+      <p><strong>Temperature:</strong> Dual-band fiber-optic radiometry</p>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Related Publications</div>
+      <a class="sidebar-link" href="../../publications.html#:~:text=Feasibility+Assessment+of+High-Enthalpy">Feasibility Assessment of High-Enthalpy Test Capability Using a Green-Propellant Hybrid Gas Generator — Whitmore & Thibaudeau</a>
+      <a class="sidebar-link" href="../../publications.html#:~:text=Simulation+of+Hypersonic+Conditions">Simulation of Hypersonic Conditions Over a Blunt Body Using a Hybrid Rocket with Nitrogen Plume Cooling — AIAA SCITECH 2026</a>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-label">// Related Projects</div>
+      <a class="sidebar-link" href="../nasa-psi/nasa-psi.html">NASA PSI Gas Generator</a>
+      <a class="sidebar-link" href="../nytrox-deorbit/nytrox-deorbit.html">100N Nytrox/ABS Deorbit Motor</a>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../../portfolio.html">Portfolio</a>
+    <a href="../../publications.html">Publications</a>
+    <a href="../../CV.html">CV</a>
+    <a href="../../contact.html">Contact</a>
+  </div>
+</footer>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="../../assets/background.js"></script>
+</body>
+</html>
