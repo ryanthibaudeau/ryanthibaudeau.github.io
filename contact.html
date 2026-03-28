@@ -8,92 +8,49 @@
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #080c10; --bg2: rgba(13,21,32,0.88); --surface: rgba(17,25,35,0.85); --border: #1e2d3d;
-      --accent: #e85d26; --accent2: #f5a623; --cyan: #3dd6f5;
-      --text: #c8d8e8; --text-dim: #5a7a9a; --text-bright: #eaf2ff;
-      --mono: 'Share Tech Mono', monospace; --head: 'Rajdhani', sans-serif; --body: 'Barlow', sans-serif;
+      --bg:#080c10;--bg2:rgba(13,21,32,0.88);--surface:rgba(17,25,35,0.85);--border:#1e2d3d;
+      --accent:#e85d26;--accent2:#f5a623;--cyan:#3dd6f5;
+      --text:#c8d8e8;--text-dim:#5a7a9a;--text-bright:#eaf2ff;
+      --mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;--body:'Barlow',sans-serif;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: transparent; color: var(--text); font-family: var(--body); font-weight: 300; overflow-x: hidden; }
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 3rem; height: 60px; background: rgba(8,12,16,0.85);
-      backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
-    }
-    .nav-logo { font-family: var(--mono); font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.1em; text-decoration: none; }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim);
-      text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase;
-      transition: color 0.2s; position: relative;
-    }
-    .nav-links a.active, .nav-links a:hover { color: var(--text-bright); }
-    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.2s; }
-    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
-
-    .page-hero {
-      position: relative; z-index: 1; padding: 8rem 10vw 4rem;
-      border-bottom: 1px solid var(--border); background: var(--bg2);
-    }
-    .page-label { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.75rem; }
-    .page-hero h1 { font-family: var(--head); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; color: var(--text-bright); margin-bottom: 1rem; }
-    .page-hero p { font-size: 1rem; line-height: 1.75; color: var(--text); max-width: 540px; }
-
-    section { position: relative; z-index: 1; padding: 5rem 10vw; }
-
-    .contact-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
-    }
-
-    .contact-channels { display: flex; flex-direction: column; gap: 1.25rem; }
-
-    .channel-card {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.5rem;
-      text-decoration: none; transition: border-color 0.2s, background 0.2s;
-      position: relative; overflow: hidden;
-    }
-    .channel-card::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-      width: 3px; background: var(--accent);
-      transform: scaleY(0); transition: transform 0.2s;
-    }
-    .channel-card:hover { background: #151f2e; border-color: #2e4060; }
-    .channel-card:hover::before { transform: scaleY(1); }
-
-    .channel-icon { font-family: var(--mono); font-size: 1.2rem; color: var(--accent); min-width: 2rem; }
-    .channel-info {}
-    .channel-type { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.2rem; }
-    .channel-value { font-family: var(--mono); font-size: 0.85rem; color: var(--cyan); }
-
-    .contact-note {
-      background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent2);
-      padding: 2rem 2.5rem;
-    }
-    .contact-note h3 { font-family: var(--head); font-size: 1.3rem; font-weight: 600; color: var(--text-bright); margin-bottom: 1rem; }
-    .contact-note p { font-size: 0.95rem; line-height: 1.8; color: var(--text); margin-bottom: 1rem; }
-    .contact-note p:last-child { margin-bottom: 0; }
-    .contact-note strong { color: var(--text-bright); }
-
-    footer {
-      border-top: 1px solid var(--border); padding: 2rem 10vw;
-      display: flex; justify-content: space-between; align-items: center; background: var(--bg2);
-      position: relative; z-index: 1;
-    }
-    footer .copy { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
-    footer .footer-links { display: flex; gap: 1.5rem; }
-    footer a { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
-    footer a:hover { color: var(--cyan); }
-
-    .scanline { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); animation: scan 8s linear infinite; opacity: 0.15; pointer-events: none; z-index: 200; }
-    @keyframes scan { 0% { top: -10px; } 100% { top: 100vh; } }
-    @media (max-width: 768px) {
-      nav { padding: 0 1.5rem; }
-      section { padding: 4rem 6vw; }
-      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;background:#080c10;}
+    body{background:transparent;color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:60px;background:rgba(8,12,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--mono);font-size:0.8rem;color:var(--cyan);letter-spacing:0.1em;text-decoration:none;}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;position:relative;}
+    .nav-links a.active,.nav-links a:hover{color:var(--text-bright);}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transition:transform 0.2s;}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+    .page-hero{position:relative;z-index:1;padding:8rem 10vw 4rem;border-bottom:1px solid var(--border);background:var(--bg2);}
+    .page-label{font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;}
+    .page-hero h1{font-family:var(--head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:var(--text-bright);margin-bottom:1rem;}
+    .page-hero p{font-size:1rem;line-height:1.75;color:var(--text);max-width:540px;}
+    section{position:relative;z-index:1;padding:5rem 10vw;}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+    .contact-channels{display:flex;flex-direction:column;gap:1.25rem;}
+    .channel-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.5rem;text-decoration:none;transition:border-color 0.2s,background 0.2s;position:relative;overflow:hidden;}
+    .channel-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transition:transform 0.2s;}
+    .channel-card:hover{background:#151f2e;border-color:#2e4060;}
+    .channel-card:hover::before{transform:scaleY(1);}
+    .channel-icon{font-family:var(--mono);font-size:1.2rem;color:var(--accent);min-width:2rem;}
+    .channel-type{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.2rem;}
+    .channel-value{font-family:var(--mono);font-size:0.85rem;color:var(--cyan);}
+    .contact-note{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);padding:2rem 2.5rem;}
+    .contact-note h3{font-family:var(--head);font-size:1.3rem;font-weight:600;color:var(--text-bright);margin-bottom:1rem;}
+    .contact-note p{font-size:0.95rem;line-height:1.8;color:var(--text);margin-bottom:1rem;}
+    .contact-note p:last-child{margin-bottom:0;}
+    .contact-note strong{color:var(--text-bright);}
+    footer{border-top:1px solid var(--border);padding:2rem 10vw;display:flex;justify-content:space-between;align-items:center;background:var(--bg2);position:relative;z-index:1;}
+    footer .copy{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+    footer .footer-links{display:flex;gap:1.5rem;}
+    footer a{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;transition:color 0.2s;}
+    footer a:hover{color:var(--cyan);}
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scan 8s linear infinite;opacity:0.15;pointer-events:none;z-index:200;}
+    @keyframes scan{0%{top:-10px;}100%{top:100vh;}}
+    @media(max-width:768px){nav{padding:0 1.5rem;}section{padding:4rem 6vw;}.contact-grid{grid-template-columns:1fr;gap:3rem;}}
   </style>
 </head>
 <body>
@@ -102,7 +59,6 @@
   <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
   <ul class="nav-links">
     <li><a href="home.html">Home</a></li>
-    
     <li><a href="portfolio.html">Portfolio</a></li>
     <li><a href="publications.html">Publications</a></li>
     <li><a href="CV.html">CV</a></li>
@@ -120,18 +76,18 @@
   <div class="contact-grid">
 
     <div class="contact-channels">
-      <a class="channel-card" href="/cdn-cgi/l/email-protection#ef9d968e81c19b87868d8e9a8b8a8e9aaf9a9c9ac18a8b9a">
+      <a class="channel-card" href="mailto:ryan.thibaudeau@usu.edu">
         <div class="channel-icon">@</div>
         <div class="channel-info">
           <div class="channel-type">Email — USU / Research</div>
-          <div class="channel-value"><span class="__cf_email__" data-cfemail="6e1c170f00401a06070c0f1b0a0b0f1b2e1b1d1b400b0a1b">[email&#160;protected]</span></div>
+          <div class="channel-value">ryan.thibaudeau@usu.edu</div>
         </div>
       </a>
-      <a class="channel-card" href="/cdn-cgi/l/email-protection#27555e464909534f4e454652434246526754434b0952545209424352">
+      <a class="channel-card" href="mailto:ryan.thibaudeau@sdl.usu.edu">
         <div class="channel-icon">@</div>
         <div class="channel-info">
           <div class="channel-type">Email — SDL / Engineering</div>
-          <div class="channel-value"><span class="__cf_email__" data-cfemail="67151e060949130f0e050612030206122714030b4912141249020312">[email&#160;protected]</span></div>
+          <div class="channel-value">ryan.thibaudeau@sdl.usu.edu</div>
         </div>
       </a>
       <a class="channel-card" href="https://linkedin.com/in/ryan-thibaudeau/" target="_blank" rel="noopener">
@@ -155,13 +111,6 @@
           <div class="channel-value">Ryan Thibaudeau</div>
         </div>
       </a>
-      <a class="channel-card" href="https://github.com/ryanthibaudeau" target="_blank" rel="noopener">
-        <div class="channel-icon">&lt;/&gt;</div>
-        <div class="channel-info">
-          <div class="channel-type">GitHub</div>
-          <div class="channel-value">github.com/ryanthibaudeau</div>
-        </div>
-      </a>
       <div class="channel-card" style="cursor:default;">
         <div class="channel-icon">📍</div>
         <div class="channel-info">
@@ -173,85 +122,26 @@
 
     <div class="contact-note">
       <h3>Get In Touch</h3>
-      <p>
-        For inquiries related to academic research, PhD work, or the USU Propulsion Research Laboratory, reach out via the <strong>USU email</strong>.
-      </p>
-      <p>
-        For propulsion engineering or additive manufacturing matters at Space Dynamics Laboratory, the <strong>SDL email</strong> is the appropriate channel.
-      </p>
-      <p>
-        I'm always open to discussing research in any propulsion domain — whether for collaboration, questions about published work, or general discussion.
-      </p>
-      <p>
-        I aim to respond within a few days — I appreciate your patience if I'm heads-down in the lab.
-      </p>
-    </div>
-  <h1>Get In Touch</h1>
-  <p>Whether you're interested in research collaboration, have questions about my work, or want to connect professionally — feel free to reach out.</p>
-</div>
-
-<section>
-  <div class="contact-grid">
-
-    <div class="contact-channels">
-      <a class="channel-card" href="/cdn-cgi/l/email-protection#ef9d968e81c19b87868d8e9a8b8a8e9aaf9a9c9ac18a8b9a">
-        <div class="channel-icon">@</div>
-        <div class="channel-info">
-          <div class="channel-type">Email — USU / Research</div>
-          <div class="channel-value"><span class="__cf_email__" data-cfemail="6e1c170f00401a06070c0f1b0a0b0f1b2e1b1d1b400b0a1b">[email&#160;protected]</span></div>
-        </div>
-      </a>
-      <a class="channel-card" href="/cdn-cgi/l/email-protection#27555e464909534f4e454652434246526754434b0952545209424352">
-        <div class="channel-icon">@</div>
-        <div class="channel-info">
-          <div class="channel-type">Email — SDL / Engineering</div>
-          <div class="channel-value"><span class="__cf_email__" data-cfemail="67151e060949130f0e050612030206122714030b4912141249020312">[email&#160;protected]</span></div>
-        </div>
-      </a>
-      <a class="channel-card" href="https://linkedin.com/in/ryan-thibaudeau/" target="_blank" rel="noopener">
-        <div class="channel-icon">in</div>
-        <div class="channel-info">
-          <div class="channel-type">LinkedIn</div>
-          <div class="channel-value">linkedin.com/in/ryan-thibaudeau</div>
-        </div>
-      </a>
-      <a class="channel-card" href="https://orcid.org/0009-0000-6483-2373" target="_blank" rel="noopener">
-        <div class="channel-icon">iD</div>
-        <div class="channel-info">
-          <div class="channel-type">ORCID</div>
-          <div class="channel-value">0009-0000-6483-2373</div>
-        </div>
-      </a>
-      <a class="channel-card" href="https://scholar.google.com/citations?user=v8wAa0oAAAAJ" target="_blank" rel="noopener">
-        <div class="channel-icon">G</div>
-        <div class="channel-info">
-          <div class="channel-type">Google Scholar</div>
-          <div class="channel-value">Ryan Thibaudeau</div>
-        </div>
-      </a>
-      <a class="channel-card" href="https://github.com/ryanthibaudeau" target="_blank" rel="noopener">
-        <div class="channel-icon">&lt;/&gt;</div>
-        <div class="channel-info">
-          <div class="channel-type">GitHub</div>
-          <div class="channel-value">github.com/ryanthibaudeau</div>
-        </div>
-      </a>
-      <div class="channel-card" style="cursor:default;">
-        <div class="channel-icon">📍</div>
-        <div class="channel-info">
-          <div class="channel-type">Location</div>
-          <div class="channel-value">Logan, Utah — USU / SDL</div>
-        </div>
-      </div>
+      <p>For inquiries related to academic research, PhD work, or the USU Propulsion Research Laboratory, reach out via the <strong>USU email</strong>.</p>
+      <p>For propulsion engineering or additive manufacturing matters at Space Dynamics Laboratory, the <strong>SDL email</strong> is the appropriate channel.</p>
+      <p>I'm always open to discussing research in any propulsion domain — whether for collaboration, questions about published work, or general discussion.</p>
+      <p>I aim to respond within a few days — I appreciate your patience if I'm heads-down in the lab.</p>
     </div>
 
-    <div class="contact-note">
-      <h3>Get In Touch</h3>
-      <p>
-        For inquiries related to academic research, PhD work, or the USU Propulsion Research Laboratory, reach out via the <strong>USU email</strong>.
-      </p>
-      <p>
-        For propulsion engineering matters at Space Dynamics Laboratory, the <strong>SDL email</strong> is the appropriate channel.
-      </p>
-      <p>
-        I'm always open to discussing research in hybrid rocket engines, solid fuel ramjets, and chemical propulsion — whether for collaboration, questions about published work, or gen
+  </div>
+</section>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="home.html">Home</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="publications.html">Publications</a>
+    <a href="CV.html">CV</a>
+  </div>
+</footer>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="assets/background.js"></script>
+</body>
+</html>
