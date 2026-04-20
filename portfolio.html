@@ -77,6 +77,7 @@
     .tag.sys{color:var(--cyan);border-color:rgba(61,214,245,0.25);}
     .tag.org-usu{color:#4ade80;border-color:rgba(74,222,128,0.25);}
     .tag.org-sdl{color:var(--cyan);border-color:rgba(61,214,245,0.25);}
+    .tag.org-ngc{color:#60a5fa;border-color:rgba(96,165,250,0.25);}
     .tag.disc{color:#a78bfa;border-color:rgba(167,139,250,0.25);}
 
     /* SECTION HEADERS */
@@ -161,6 +162,7 @@
     <button class="tab-btn org-btn active" onclick="setFilter('org','all',this)">All</button>
     <button class="tab-btn org-btn" onclick="setFilter('org','USU',this)">USU</button>
     <button class="tab-btn org-btn" onclick="setFilter('org','SDL',this)">SDL</button>
+    <button class="tab-btn org-btn" onclick="setFilter('org','NGC',this)">Northrop Grumman</button>
   </div>
   <span class="tab-row-label">Sort by System</span>
   <div class="tab-row" id="row-sys">
@@ -320,6 +322,21 @@ const PROJECTS = [
     accent: '#e85d26',
     pubs: []
   },
+  // ── NGC PROJECTS ──────────────────────────────────────────────────────────
+  {
+    id: 'NGC-PM-001',
+    title: 'Trident I C4 Sustainment — Asset Management',
+    org: ['NGC'],
+    sys: ['Program Management'],
+    disc: ['Design & Analysis'],
+    status: 'complete',
+    desc: 'Supported sustainment operations for the Trident I C4 SLBM program (retired from US Navy service 2005) at Northrop Grumman\'s Magna, UT facility. Managed concurrent project streams to track asset status and generate progress reports, coordinating across 12+ program managers to facilitate hardware movement and disposition throughout the sustainment lifecycle.',
+    result: 'Led weekly cross-functional problem-solving and status meetings. Contributed to testing procedure development and IDIQ funding proposals supporting solid propellant aging studies — directly informing long-term sustainment planning for the program.',
+    contribution: 'College Intern Technical — independent ownership of asset tracking workstreams, cross-functional coordination, and proposal contribution.',
+    tags: ['Asset Management', 'Sustainment', 'Solid Propellant', 'IDIQ', 'Program Management'],
+    accent: '#60a5fa',
+    pubs: []
+  },
   // ── SDL PROJECTS ──────────────────────────────────────────────────────────
   {
     id: 'SDL-HRE-001',
@@ -374,7 +391,7 @@ const PROJECTS = [
     org: ['SDL'],
     sys: ['Spacecraft'],
     disc: ['Experimental', 'Design & Analysis'],
-    status: 'complete',
+    status: 'active',
     desc: 'Conducted propulsion system performance validation for the <a href="https://www.jpl.nasa.gov/missions/sun-radio-interferometer-space-experiment/" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none;" onmouseover="this.style.color=\'var(--accent2)\'" onmouseout="this.style.color=\'var(--cyan)\'">NASA SunRISE</a> (Sun Radio Interferometer Space Experiment) mission — a formation-flying CubeSat constellation designed to study solar radio bursts from beyond Earth\'s ionosphere. Work supported verification of the propulsion subsystem ahead of launch.',
     result: 'Fully characterized and validated performance of each individual thruster and confirmed full propulsion system functionality. Mission ready for launch summer 2026.',
     contribution: 'Test Engineer — LabVIEW interface design support, GSE hardware design and validation in vacuum chamber, test technician, data analysis and reduction for reporting.',
@@ -469,7 +486,7 @@ function render() {
     groups[key].push(p);
   });
 
-  const orgOrder = ['USU', 'SDL', 'USU / SDL'];
+  const orgOrder = ['USU', 'SDL', 'NGC', 'USU / SDL'];
   const sortedKeys = Object.keys(groups).sort((a, b) => {
     const ai = orgOrder.indexOf(a); const bi = orgOrder.indexOf(b);
     return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
@@ -478,7 +495,7 @@ function render() {
   let html = '';
   sortedKeys.forEach(key => {
     const cards = groups[key];
-    const orgLabel = key === 'USU' ? 'Utah State University' : key === 'SDL' ? 'Space Dynamics Laboratory' : key;
+    const orgLabel = key === 'USU' ? 'Utah State University' : key === 'SDL' ? 'Space Dynamics Laboratory' : key === 'NGC' ? 'Northrop Grumman' : key;
 
     // Split into Projects and Models & Analysis Tools
     // A card goes to Models & Analysis Tools ONLY if Modeling & Simulation is present and Experimental/AM are NOT
