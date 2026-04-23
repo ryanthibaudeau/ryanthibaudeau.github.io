@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recognitions — Ryan Thibaudeau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#080c10;--bg2:rgba(13,21,32,0.88);--surface:rgba(17,25,35,0.85);
+      --border:#1e2d3d;--accent:#e85d26;--accent2:#f5a623;--cyan:#3dd6f5;
+      --text:#c8d8e8;--text-dim:#5a7a9a;--text-bright:#eaf2ff;
+      --mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;--body:'Barlow',sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;background:#080c10;}
+    body{background:transparent;color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:60px;background:rgba(8,12,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--mono);font-size:0.8rem;color:var(--cyan);letter-spacing:0.1em;text-decoration:none;}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s;position:relative;}
+    .nav-links a.active,.nav-links a:hover{color:var(--text-bright);}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transition:transform 0.2s;}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+
+    .page-hero{position:relative;z-index:1;padding:8rem 10vw 4rem;border-bottom:1px solid var(--border);background:var(--bg2);}
+    .page-label{font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;}
+    .page-hero h1{font-family:var(--head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:var(--text-bright);margin-bottom:1rem;}
+    .page-hero p{font-size:1rem;line-height:1.75;color:var(--text);max-width:600px;}
+
+    main{position:relative;z-index:1;padding:4rem 10vw 6rem;}
+
+    /* SECTION HEADERS */
+    .rec-section{margin-bottom:4rem;}
+    .rec-section-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+    .rec-section-title{font-family:var(--head);font-size:1.8rem;font-weight:700;color:var(--text-bright);}
+    .rec-section-count{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.2em;margin-left:auto;}
+
+    /* CARDS GRID */
+    .rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem;}
+
+    /* INDIVIDUAL CARD */
+    .rec-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--card-accent,var(--accent));padding:1.5rem;display:flex;flex-direction:column;gap:0.6rem;transition:transform 0.2s,border-color 0.2s;}
+    .rec-card:hover{transform:translateY(-3px);border-color:#2e4060;}
+    .rec-card-year{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.2em;}
+    .rec-card-title{font-family:var(--head);font-size:1.1rem;font-weight:600;color:var(--text-bright);line-height:1.3;}
+    .rec-card-sub{font-size:0.88rem;color:var(--text-dim);line-height:1.6;}
+    .rec-card-link{font-family:var(--mono);font-size:0.65rem;color:var(--cyan);text-decoration:none;letter-spacing:0.08em;transition:color 0.2s;margin-top:0.25rem;display:inline-block;}
+    .rec-card-link:hover{color:var(--accent2);}
+    .rec-card-link::before{content:'→ ';}
+    .rec-card-org{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.18rem 0.5rem;border:1px solid;display:inline-block;margin-bottom:0.25rem;}
+    .org-usu{color:#4ade80;border-color:rgba(74,222,128,0.3);}
+    .org-sdl{color:var(--cyan);border-color:rgba(61,214,245,0.25);}
+    .org-aiaa{color:#a78bfa;border-color:rgba(167,139,250,0.25);}
+    .org-nasa{color:var(--accent2);border-color:rgba(245,166,35,0.3);}
+
+    /* PRESS COVERAGE - wider single column list */
+    .press-list{display:flex;flex-direction:column;gap:0.75rem;}
+    .press-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--cyan);padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:1.5rem;text-decoration:none;transition:border-color 0.2s,background 0.2s;}
+    .press-item:hover{background:#0f1820;border-color:#2e4060;}
+    .press-source{font-family:var(--mono);font-size:0.6rem;color:var(--cyan);letter-spacing:0.15em;text-transform:uppercase;min-width:120px;flex-shrink:0;padding-top:0.15rem;}
+    .press-content{}
+    .press-title{font-size:0.92rem;color:var(--text-bright);line-height:1.5;margin-bottom:0.2rem;}
+    .press-meta{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.08em;}
+
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem 10vw;display:flex;justify-content:space-between;align-items:center;background:var(--bg2);}
+    footer .copy{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+    footer .footer-links{display:flex;gap:1.5rem;}
+    footer a{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;transition:color 0.2s;}
+    footer a:hover{color:var(--cyan);}
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scan 8s linear infinite;opacity:0.15;pointer-events:none;z-index:200;}
+    @keyframes scan{0%{top:-10px;}100%{top:100vh;}}
+    @media(max-width:900px){nav{padding:0 1.5rem;}.nav-links{gap:1rem;}main,.page-hero{padding-left:6vw;padding-right:6vw;}footer{padding:2rem 6vw;}.rec-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav>
+  <a class="nav-logo" href="home.html">RT<span>//</span>PROPULSION</a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="publications.html">Publications</a></li>
+    <li><a href="recognitions.html" class="active">Recognitions</a></li>
+    <li><a href="CV.html">CV</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">// recognitions</div>
+  <h1>Recognitions</h1>
+  <p>Awards, fellowships, patents, and press coverage — a record of work that has been recognized beyond the lab and the conference room.</p>
+</div>
+
+<main>
+
+  <!-- AWARDS -->
+  <div class="rec-section">
+    <div class="rec-section-header">
+      <div class="rec-section-title">Awards</div>
+      <div class="rec-section-count">3 awards</div>
+    </div>
+    <div class="rec-grid">
+
+      <div class="rec-card" style="--card-accent:var(--accent2);">
+        <span class="rec-card-org org-aiaa">AIAA</span>
+        <div class="rec-card-year">2026</div>
+        <div class="rec-card-title">Best Paper — AIAA SciTech Forum</div>
+        <div class="rec-card-sub">Awarded for "Feasibility Assessments of a Unique Additive Manufacturing Method for Functionally-Graded Solid Fuel Ramjet Propellants."</div>
+        <a class="rec-card-link" href="https://arc.aiaa.org/doi/10.2514/6.2026-1579" target="_blank" rel="noopener">View Paper</a>
+      </div>
+
+      <div class="rec-card" style="--card-accent:var(--accent2);">
+        <span class="rec-card-org org-aiaa">AIAA</span>
+        <div class="rec-card-year">2024</div>
+        <div class="rec-card-title">1st Place, Masters Category — AIAA International Student Conference</div>
+        <div class="rec-card-sub">Top prize in the graduate research category at the international student conference of the American Institute of Aeronautics and Astronautics.</div>
+      </div>
+
+      <div class="rec-card" style="--card-accent:var(--cyan);">
+        <span class="rec-card-org org-sdl">SDL</span>
+        <div class="rec-card-year">2023</div>
+        <div class="rec-card-title">Student Scholar Award — Space Dynamics Laboratory</div>
+        <div class="rec-card-sub">Awarded for validation of hydrogen peroxide monopropellant thruster design — recognizing exceptional student research contribution at SDL.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FELLOWSHIPS -->
+  <div class="rec-section">
+    <div class="rec-section-header">
+      <div class="rec-section-title">Fellowships</div>
+      <div class="rec-section-count">1 fellowship</div>
+    </div>
+    <div class="rec-grid">
+
+      <div class="rec-card" style="--card-accent:var(--cyan);">
+        <span class="rec-card-org org-sdl">SDL</span>
+        <div class="rec-card-year">Active</div>
+        <div class="rec-card-title">SDL PhD Tomorrow Fellowship</div>
+        <div class="rec-card-sub">Competitive fellowship awarded by Space Dynamics Laboratory in support of PhD research, recognizing high-potential graduate researchers advancing technology relevant to SDL's mission.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PATENTS -->
+  <div class="rec-section">
+    <div class="rec-section-header">
+      <div class="rec-section-title">Patents</div>
+      <div class="rec-section-count">2 pending</div>
+    </div>
+    <div class="rec-grid">
+
+      <div class="rec-card" style="--card-accent:#a78bfa;">
+        <span class="rec-card-org org-usu">USU</span>
+        <div class="rec-card-year">Filed 2023 — Pending</div>
+        <div class="rec-card-title">Infused Solid Fuel for Hybrid Rockets and Ordnance</div>
+        <div class="rec-card-sub">A novel method for cold-infusing catalytic materials into 3D-printed ABS fuel grains to enhance ignition and performance of hybrid rocket engines. Primary inventor — 75% ownership.</div>
+        <div class="rec-card-sub" style="margin-top:0.25rem;font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);">US 2025/0282694 A1</div>
+        <a class="rec-card-link" href="projects/catgrain/catgrain.html">Related Project: 1N CatGrain Thruster</a>
+      </div>
+
+      <div class="rec-card" style="--card-accent:#a78bfa;">
+        <span class="rec-card-org org-sdl">SDL</span>
+        <div class="rec-card-year">Filed 2024 — Pending</div>
+        <div class="rec-card-title">Propellant Tanks for Space Satellites with Integrally Formed Propellant Management Devices</div>
+        <div class="rec-card-sub">Volume-optimized 3D-printed titanium propellant tanks with integrally printed PMDs for small satellite propulsion systems. Secondary inventor — 40% ownership.</div>
+        <div class="rec-card-sub" style="margin-top:0.25rem;font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);">US 18/793,561</div>
+        <a class="rec-card-link" href="https://www.sdl.usu.edu/downloads/brochures/small-satellite-propulsion-tanks.pdf" target="_blank" rel="noopener">SDL Product Brochure</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRESS COVERAGE -->
+  <div class="rec-section">
+    <div class="rec-section-header">
+      <div class="rec-section-title">Press Coverage</div>
+      <div class="rec-section-count">10 items</div>
+    </div>
+    <div class="press-list">
+
+      <a class="press-item" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">
+        <div class="press-source">LinkedIn / USU Office of Research</div>
+        <div class="press-content">
+          <div class="press-title">M.S. Thesis Feature — Catalyst-Infused Fuel Grain for Hybrid Rocket Ignition Enhancement</div>
+          <div class="press-meta">April 2026 · Add URL once available</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.nasa.gov/general/what-a-blast-nasa-langley-begins-plume-surface-interaction-tests/" target="_blank" rel="noopener">
+        <div class="press-source">NASA Langley</div>
+        <div class="press-content">
+          <div class="press-title">What a Blast — NASA Langley Begins Plume-Surface Interaction Tests</div>
+          <div class="press-meta">December 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.usu.edu/today/story/usu-researchers-developing-hybrid-rocket-motors-for-nasa/" target="_blank" rel="noopener">
+        <div class="press-source">USU Today</div>
+        <div class="press-content">
+          <div class="press-title">USU Researchers Developing Hybrid Rocket Motors for NASA</div>
+          <div class="press-meta">September 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://engineering.usu.edu/news/main-feed/2025/nasa-testing-usus-3dprinted-hybrid-rocket-motor-for-safer-moon-landings" target="_blank" rel="noopener">
+        <div class="press-source">USU Engineering</div>
+        <div class="press-content">
+          <div class="press-title">NASA Testing USU's 3D-Printed Hybrid Rocket Motor for Safer Moon Landings</div>
+          <div class="press-meta">August 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.usu.edu/today/story/nasa-testing-usus-3d-printed-hybrid-rocket-motor-for-safer-moon-landings" target="_blank" rel="noopener">
+        <div class="press-source">USU Today</div>
+        <div class="press-content">
+          <div class="press-title">NASA Testing USU's 3D-Printed Hybrid Rocket Motor for Safer Moon Landings</div>
+          <div class="press-meta">June 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://ksltv.com/local-news/usu-nasa-hybrid-rocket-motor/785064/" target="_blank" rel="noopener">
+        <div class="press-source">KSL TV</div>
+        <div class="press-content">
+          <div class="press-title">Hybrid Rocket Motor Developed by USU Researchers in Collaboration with NASA</div>
+          <div class="press-meta">June 2025 · Ryan Thibaudeau quoted</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.ksl.com/article/51329075/utah-state-university-researchers-develop-next-generation-of-moon-lander-rocket-motor" target="_blank" rel="noopener">
+        <div class="press-source">KSL.com</div>
+        <div class="press-content">
+          <div class="press-title">Utah State University Researchers Develop Next Generation of Moon Lander Rocket Motor</div>
+          <div class="press-meta">June 2025 · Ryan Thibaudeau quoted</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.nasa.gov/centers-and-facilities/marshall/nasa-marshall-fires-up-hybrid-rocket-motor-to-prep-for-moon-landings/" target="_blank" rel="noopener">
+        <div class="press-source">NASA Marshall</div>
+        <div class="press-content">
+          <div class="press-title">NASA Marshall Fires Up Hybrid Rocket Motor to Prep for Moon Landings</div>
+          <div class="press-meta">April 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.youtube.com/watch?v=Dt5eDHo5lDQ" target="_blank" rel="noopener">
+        <div class="press-source">NASA YouTube</div>
+        <div class="press-content">
+          <div class="press-title">NASA Marshall Fires Up Hybrid Rocket Motor to Prep for Moon Landings — Video</div>
+          <div class="press-meta">April 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://phys.org/news/2025-04-nasa-marshall-hybrid-rocket-motor.html" target="_blank" rel="noopener">
+        <div class="press-source">Phys.org</div>
+        <div class="press-content">
+          <div class="press-title">NASA Marshall Fires Up Hybrid Rocket Motor to Prep for Moon Landings</div>
+          <div class="press-meta">April 2025</div>
+        </div>
+      </a>
+
+      <a class="press-item" href="https://www.sdl.usu.edu/downloads/brochures/small-satellite-propulsion-tanks.pdf" target="_blank" rel="noopener">
+        <div class="press-source">SDL</div>
+        <div class="press-content">
+          <div class="press-title">Small Satellite Propulsion Tanks — Product Brochure</div>
+          <div class="press-meta">3D-Printed Titanium Volume-Optimized Propulsion Tank</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="copy">© 2026 Ryan Thibaudeau. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="home.html">Home</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="publications.html">Publications</a>
+    <a href="CV.html">CV</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<script src="assets/background.js"></script>
+</body>
+</html>
