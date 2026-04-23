@@ -30,6 +30,12 @@
     .page-hero h1{font-family:var(--head);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:var(--text-bright);margin-bottom:1rem;}
     .page-hero p{font-size:1rem;line-height:1.75;color:var(--text);max-width:600px;}
 
+    /* HERO STATS SUMMARY */
+    .hero-stats{display:flex;flex-wrap:wrap;gap:2.75rem;margin-top:2rem;padding-top:1.75rem;border-top:1px solid var(--border);}
+    .hero-stat{display:flex;flex-direction:column;gap:0.4rem;}
+    .hero-stat-num{font-family:var(--head);font-size:2.25rem;font-weight:700;color:var(--accent);line-height:1;}
+    .hero-stat-label{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.22em;text-transform:uppercase;}
+
     main{position:relative;z-index:1;padding:4rem 10vw 6rem;}
 
     /* SECTION HEADERS */
@@ -93,6 +99,24 @@
   <div class="page-label">// recognitions</div>
   <h1>Recognitions</h1>
   <p>Awards, fellowships, patents, and press coverage — a record of work that has been recognized beyond the lab and the conference room.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">3</span>
+      <span class="hero-stat-label">Awards</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">1</span>
+      <span class="hero-stat-label">Fellowship</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">2</span>
+      <span class="hero-stat-label">Patents Pending</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">11</span>
+      <span class="hero-stat-label">Press Items</span>
+    </div>
+  </div>
 </div>
 
 <main>
@@ -181,7 +205,7 @@
   <div class="rec-section">
     <div class="rec-section-header">
       <div class="rec-section-title">Press Coverage</div>
-      <div class="rec-section-count">10 items</div>
+      <div class="rec-section-count">11 items</div>
     </div>
     <div class="press-list">
 
