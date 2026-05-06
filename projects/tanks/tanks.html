@@ -68,6 +68,13 @@
     .img-placeholder .img-caption{font-size:0.82rem;color:var(--text-dim);font-style:italic;}
     .img-placeholder .img-icon{font-size:2rem;opacity:0.2;margin-bottom:0.75rem;}
 
+    .project-figure{background:var(--surface);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;margin:0;}
+    .project-figure img,.project-figure video{display:block;width:100%;height:auto;background:#0a0e14;}
+    .project-figure figcaption{padding:1rem 1.25rem;border-top:1px solid var(--border);}
+    .project-figure .img-label{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:0.4rem;}
+    .project-figure .img-caption{font-size:0.82rem;color:var(--text-dim);line-height:1.55;display:block;font-style:italic;}
+    .project-figure-full{margin:1.5rem 0;}
+
     .sidebar-card{background:var(--surface);border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem;}
     .sidebar-card-label{font-family:var(--mono);font-size:0.58rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
     .sidebar-card p{font-size:0.82rem;line-height:1.65;color:var(--text-dim);margin-bottom:0.4rem;}
@@ -154,16 +161,20 @@
       </p>
 
       <div class="img-grid">
-        <div class="img-placeholder">
-          <div class="img-icon">⬡</div>
-          <div class="img-label">// Half-ESPA Tank</div>
-          <div class="img-caption">LPBF Ti-6Al-4V half-ESPA conformal propellant tank after heat treatment and precision cleaning.</div>
-        </div>
-        <div class="img-placeholder">
-          <div class="img-icon">◈</div>
-          <div class="img-label">// Integral PMD</div>
-          <div class="img-caption">Internal propellant management device printed integral to the tank body — no separate assembly.</div>
-        </div>
+        <figure class="project-figure">
+          <img src="img/Half-ESPA%20Tank.png" alt="LPBF Ti-6Al-4V half-ESPA conformal propellant tank" loading="lazy">
+          <figcaption>
+            <span class="img-label">// Half-ESPA Tank</span>
+            <span class="img-caption">LPBF Ti-6Al-4V half-ESPA conformal propellant tank after heat treatment and precision cleaning.</span>
+          </figcaption>
+        </figure>
+        <figure class="project-figure">
+          <img src="img/Full-ESPA%20Tank.png" alt="Full-ESPA conformal propellant tank" loading="lazy">
+          <figcaption>
+            <span class="img-label">// Full-ESPA Tank</span>
+            <span class="img-caption">Full-ESPA configuration — the same conformal architecture scaled to fill an ESPA-class spacecraft propulsion bay.</span>
+          </figcaption>
+        </figure>
       </div>
     </div>
 
@@ -176,6 +187,17 @@
       <p>
         The design reduces lead time and cost by approximately 50% relative to conventional machined tanks. The integral PMD eliminates a separate assembly step, which is a large part of the reduced cost and lead time.
       </p>
+
+      <figure class="project-figure project-figure-full">
+        <video controls autoplay muted loop playsinline preload="metadata">
+          <source src="img/CTscan_vid.mp4" type="video/mp4">
+          Your browser does not support embedded video.
+        </video>
+        <figcaption>
+          <span class="img-label">// CT Inspection</span>
+          <span class="img-caption">CT scan rotation of an as-built tank — used to verify internal geometry, including the integral PMD, and to screen for sub-surface defects from the LPBF process.</span>
+        </figcaption>
+      </figure>
 
       <div class="result-callout">
         <div class="callout-label">// Key Result</div>
